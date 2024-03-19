@@ -1,7 +1,7 @@
 import React from "react";
 import { Link } from "react-router-dom";
 import { DetailCard } from "../component/DetailCard";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { DELETE_APPOINTMENT } from "../mutate/appointMutate";
 import { useMutation, useQuery } from "@apollo/client";
@@ -16,7 +16,7 @@ export const Detail = () => {
   const details = useDetail(loading, error, data);
 
   const handleDeleteAppointment = async (id) => {
-    const result = await deleteAppointment({
+    await deleteAppointment({
       variables: { id: id },
       update: (cache, { data }) => {
         const { appointments } = cache.readQuery({
@@ -44,7 +44,7 @@ export const Detail = () => {
       </div>
 
       {details.length === 0 ? (
-        <p className="mt-3 text-lg">There are no appointments</p>
+        <Title className={"mt-3 text-lg"}>There are no appointments</Title>
       ) : (
         details.map((item, index) => {
           return (
