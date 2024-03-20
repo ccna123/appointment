@@ -1,11 +1,13 @@
 import React from "react";
+import { twMerge } from "tailwind-merge";
 
 const ResMess = ({ mess, status }) => {
   return (
     <p
-      className={`${
-        status === 200 ? "text-green-500" : "text-red-500"
-      } text-lg mt-4 font-bold`}
+      className={twMerge(
+        "text-lg mt-4 font-bold",
+        `bg-${status === 200 ? "green" : "red"}-500`
+      )}
     >
       {mess}
     </p>

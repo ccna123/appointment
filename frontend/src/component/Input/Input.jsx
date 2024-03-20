@@ -1,4 +1,5 @@
 import React from "react";
+import { twMerge } from "tailwind-merge";
 
 const Input = ({
   children,
@@ -15,7 +16,10 @@ const Input = ({
       value={value}
       type={type}
       placeholder={placeholder}
-      className={`border-2 rounded-md w-full focus:outline-none ${className}`}
+      className={twMerge(
+        "border-2 rounded-md w-full focus:outline-none",
+        className
+      )}
       onChange={onChange}
     >
       {children}
