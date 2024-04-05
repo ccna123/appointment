@@ -17,6 +17,7 @@ export const Admin = () => {
   const [refresh, setRefresh] = useState(false);
   const navigate = useNavigate();
   const [keyword, setKeyword] = useState("");
+  const [isSearchInvalid, setIsSearchInvalid] = useState(false);
 
   const handleConfirm = async (appointId, userId) => {
     await axios.put(
@@ -37,10 +38,15 @@ export const Admin = () => {
   const handleClear = () => {
     setKeyword("");
     setRefresh((prev) => !prev);
+    setIsSearchInvalid(false);
   };
 
   const handleSearch = async () => {
     try {
+      if (keyword == "") {
+        setIsSearchInvalid(true);
+        return null;
+      }
       const res = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}admin/searchAppoint`,
         { keyword }
@@ -79,6 +85,7 @@ export const Admin = () => {
       </div>
       <AppointmentContainer>
         <AppointmentSearch
+          isSearchInvalid={isSearchInvalid}
           keyword={keyword}
           handleSearchInputChange={handleSearchInputChange}
           handleSearch={handleSearch}
