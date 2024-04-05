@@ -15,7 +15,7 @@ const client = new ApolloClient({
 function App() {
   return (
     <ApolloProvider client={client}>
-      <div className="App bg-gray-200 flex justify-center w-full h-screen">
+      <div className="App bg-gray-200 flex justify-center w-full min-h-screen">
         <BrowserRouter router>
           <Routes>
             <Route path="/" element={<Login />} />
