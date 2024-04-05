@@ -18,13 +18,13 @@ const AppointmentSearch = ({
       />
       <Button
         onClick={handleSearch}
-        className={"text-white w-fit bg-blue-500 border-none hover:bg-blue-700"}
+        className={"text-white w-fit bg-blue-500 hover:bg-blue-700"}
       >
         Search
       </Button>
       <Button
         onClick={handleClear}
-        className={"text-white w-fit bg-red-500 border-none hover:bg-red-700"}
+        className={"text-white w-fit bg-red-500 hover:bg-red-700"}
       >
         Clear
       </Button>

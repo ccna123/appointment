@@ -81,7 +81,7 @@ export const Main = () => {
           </Link>
           <Button
             onClick={() => handleLogout(navigate)}
-            className="bg-red-500 hover:bg-red-700 text-sm p-1 border-none"
+            className="bg-red-500 hover:bg-red-700 text-sm p-1"
           >
             Logout
           </Button>

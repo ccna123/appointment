@@ -72,7 +72,7 @@ export const Admin = () => {
         <Title className={"my-3 uppercase"}>Appointment List</Title>
         <Button
           onClick={() => handleLogout(navigate)}
-          className="bg-red-500 hover:bg-red-700 text-sm p-1 border-none w-[64px]"
+          className="bg-red-500 hover:bg-red-700 text-sm p-1 w-[64px]"
         >
           Logout
         </Button>
