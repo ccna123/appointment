@@ -10,11 +10,13 @@ import axios from "axios";
 import Button from "../component/Button/Button";
 import handleLogout from "../helper/Logout";
 import AppointmentContainer from "../component/Appointment/AppointmentContainer";
+import AppointmentSearch from "../component/Appointment/AppointmentSearch";
 
 export const Admin = () => {
   const [data, setData] = useState([{}]);
   const [refresh, setRefresh] = useState(false);
   const navigate = useNavigate();
+  const [keyword, setKeyword] = useState("");
 
   const handleConfirm = async (appointId, userId) => {
     await axios.put(
@@ -26,6 +28,27 @@ export const Admin = () => {
     );
     notify("Confirm successfully", "success");
     setRefresh((prev) => !prev);
+  };
+
+  const handleSearchInputChange = (value) => {
+    setKeyword(value);
+  };
+
+  const handleClear = () => {
+    setKeyword("");
+    setRefresh((prev) => !prev);
+  };
+
+  const handleSearch = async () => {
+    try {
+      const res = await axios.post(
+        `${process.env.REACT_APP_BACKEND_URL}admin/searchAppoint`,
+        { keyword }
+      );
+      setData(res.data);
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   useEffect(() => {
@@ -55,6 +78,12 @@ export const Admin = () => {
         </Button>
       </div>
       <AppointmentContainer>
+        <AppointmentSearch
+          keyword={keyword}
+          handleSearchInputChange={handleSearchInputChange}
+          handleSearch={handleSearch}
+          handleClear={handleClear}
+        />
         <AppontmentDetailContainer>
           {data.map((appoint, index) => {
             return (
