@@ -1,26 +1,42 @@
-import { useMutation, useQuery } from "@apollo/client";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { GET_APPOINTMENTS } from "../queries/appointQuery";
-import { CONFIRM_APPOINTMENT } from "../mutate/appointMutate";
 import notify from "../ultil/notify";
 import Title from "../component/TItle/Title";
 import AppointmentItem from "../component/Appointment/AppointmentItem";
 import AppontmentContainer from "../component/Appointment/AppontmentContainer";
+import axios from "axios";
 
 export const Admin = () => {
-  const { loading, error, data } = useQuery(GET_APPOINTMENTS);
-  const [confirmAppointment] = useMutation(CONFIRM_APPOINTMENT);
+  const [data, setData] = useState([{}]);
+  const [refresh, setRefresh] = useState(false);
 
-  const handleConfirm = async (itemId) => {
-    await confirmAppointment({
-      variables: { id: itemId },
-      refetchQueries: [{ query: GET_APPOINTMENTS }],
-    });
+  const handleConfirm = async (appointId, userId) => {
+    await axios.put(
+      `${process.env.REACT_APP_BACKEND_URL}admin/updateAppointStatus`,
+      {
+        appointId,
+        userId,
+      }
+    );
     notify("Confirm successfully", "success");
+    setRefresh((prev) => !prev);
   };
+
+  useEffect(() => {
+    const fetchAllAppoint = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_BACKEND_URL}admin/getAllUserAppoint`
+        );
+        setData(res.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchAllAppoint();
+  }, [refresh]);
 
   return (
     <div className="my-10 w-full p-4">
@@ -35,19 +51,16 @@ export const Admin = () => {
         <p className="col-span-4">Content</p>
       </div>
       <AppontmentContainer>
-        {!loading &&
-          !error &&
-          data &&
-          data.appointments.map((appoint, index) => {
-            return (
-              <AppointmentItem
-                key={appoint.id}
-                appoint={appoint}
-                index={index}
-                handleConfirm={handleConfirm}
-              />
-            );
-          })}
+        {data.map((appoint, index) => {
+          return (
+            <AppointmentItem
+              key={appoint.id}
+              appoint={appoint}
+              index={index}
+              handleConfirm={handleConfirm}
+            />
+          );
+        })}
       </AppontmentContainer>
     </div>
   );

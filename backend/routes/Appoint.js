@@ -1,7 +1,6 @@
 const express = require("express")
 const router = express.Router()
-const { PrismaClient } = require('@prisma/client');
-const prisma = new PrismaClient();
+const prisma = require("../helper/prisma");
 
 router.post("/create", async (req, res) => {
     try {
@@ -22,41 +21,6 @@ router.post("/create", async (req, res) => {
       console.log(error);
     }
   });
-  
-  // router.get("/get_appoint", async (req, res) => {
-  //   try {
-  //     const record = await prisma.appointment.findMany({
-  //       where: {
-  //         userId: parseInt(req.query.userId),
-  //       },
-  //       include: {
-  //         user: true,
-  //       },
-  //     });
-  //     if (record) {
-  //       return res.status(200).send(record);
-  //     }
-  //     return res.status(404).json({ mess: "Not found " });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // });
-  
-  // router.get("/all", async (req, res) => {
-  //   try {
-  //     const records = await prisma.appointment.findMany({
-  //       include: {
-  //         user: true,
-  //       },
-  //     });
-  //     if (records) {
-  //       return res.status(200).send(records);
-  //     }
-  //     return res.status(404).json({ mess: "Not found " });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // });
   
   router.delete("/delete", async (req, res) => {
     try {
