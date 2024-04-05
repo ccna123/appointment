@@ -10,6 +10,7 @@ import notify from "../ultil/notify";
 import Title from "../component/TItle/Title";
 import TextArea from "../component/TextArea/TextArea";
 import axios from "axios";
+import handleLogout from "../helper/Logout";
 
 export const Main = () => {
   const navigate = useNavigate();
@@ -65,10 +66,6 @@ export const Main = () => {
     }
   };
 
-  const handleLogout = async () => {
-    localStorage.removeItem("user");
-    navigate("/");
-  };
   return (
     <div className="bg-white overflow-y-scroll rounded-md my-4 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] flex items-start flex-col p-4 w-full mx-2 lg:mx-0 lg:w-[50%]">
       <ToastContainer />
@@ -83,7 +80,7 @@ export const Main = () => {
             {userName}
           </Link>
           <Button
-            onClick={handleLogout}
+            onClick={() => handleLogout(navigate)}
             className="bg-red-500 hover:bg-red-700 text-sm p-1 border-none"
           >
             Logout
