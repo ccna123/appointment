@@ -5,7 +5,7 @@ const Button = ({ children, onClick, className, disabled = false }) => {
   return (
     <button
       className={twMerge(
-        "text-white rounded-md p-2 w-full border-2 duration-100 font-bold",
+        "text-white rounded-md p-2 w-full border-none duration-100 font-bold",
         className
       )}
       onClick={onClick}
