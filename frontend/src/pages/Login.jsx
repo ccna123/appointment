@@ -24,7 +24,7 @@ const Login = () => {
   const handleLogin = async () => {
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}login`,
+        `${process.env.REACT_APP_BACKEND_URL}user/login`,
         {
           email: formData.email,
           password: formData.password,

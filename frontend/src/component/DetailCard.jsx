@@ -2,7 +2,11 @@ import React, { useState } from "react";
 import { ModalEdit } from "./ModalEdit";
 import Button from "../component/Button/Button";
 
-export const DetailCard = ({ item, handleDeleteAppointment }) => {
+export const DetailCard = ({
+  item,
+  handleDeleteAppointment,
+  handleUpdateAppointment,
+}) => {
   const [showNote, setShowNote] = useState(false);
   const [toggleModal, setToggleModal] = useState(false);
 
@@ -46,9 +50,9 @@ export const DetailCard = ({ item, handleDeleteAppointment }) => {
             <p className="text-slate-500 text-sm uppercase">{key}</p>
             <p
               className={`${
-                item[key] === "Waiting"
+                item[key] === "waiting"
                   ? "text-blue-600 font-bold"
-                  : item[key] === "Confirmed"
+                  : item[key] === "confirmed"
                   ? "text-green-600 font-bold"
                   : ""
               }`}
@@ -64,7 +68,13 @@ export const DetailCard = ({ item, handleDeleteAppointment }) => {
       >
         View Note
       </p>
-      <p className={`${showNote ? "block" : "hidden"} p-3`}>{item.notes}</p>
+      <p
+        className={`${
+          showNote ? "block overflow-y-scroll break-words h-[128px]" : "hidden"
+        } p-3`}
+      >
+        {item.notes}
+      </p>
 
       <div className="flex items-center justify-center mx-4 gap-3 mb-4">
         <Button
@@ -83,6 +93,7 @@ export const DetailCard = ({ item, handleDeleteAppointment }) => {
       </div>
       {toggleModal && (
         <ModalEdit
+          handleUpdateAppointment={handleUpdateAppointment}
           toggleModal={toggleModal}
           setToggleModal={setToggleModal}
           itemId={item.id}

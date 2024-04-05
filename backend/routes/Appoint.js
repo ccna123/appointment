@@ -1,5 +1,6 @@
 const express = require("express")
 const router = express.Router()
+const prisma = require("../helper/prisma");
 
 router.post("/create", async (req, res) => {
     try {
@@ -21,14 +22,26 @@ router.post("/create", async (req, res) => {
     }
   });
   
-  router.get("/get_appoint", async (req, res) => {
+  router.delete("/delete", async (req, res) => {
     try {
-      const record = await prisma.appointment.findMany({
+      await prisma.appointment.delete({
         where: {
+          id: parseInt(req.query.id),
           userId: parseInt(req.query.userId),
         },
-        include: {
-          user: true,
+      });
+      return res.status(200).json({ mess: "Deleted" });
+    } catch (error) {
+      console.log(error);
+    }
+  });
+
+  router.get("/getSingleAppoint", async (req, res) => {
+    try {
+      const record = await prisma.appointment.findUnique({
+        where: {
+          id: parseInt(req.query.id),
+          userId: parseInt(req.query.userId),
         },
       });
       if (record) {
@@ -40,41 +53,10 @@ router.post("/create", async (req, res) => {
     }
   });
   
-  router.get("/all", async (req, res) => {
+  router.get("/getAllAppoint", async (req, res) => {
     try {
-      const records = await prisma.appointment.findMany({
-        include: {
-          user: true,
-        },
-      });
-      if (records) {
-        return res.status(200).send(records);
-      }
-      return res.status(404).json({ mess: "Not found " });
-    } catch (error) {
-      console.log(error);
-    }
-  });
-  
-  router.delete("/delete", async (req, res) => {
-    try {
-      const record = await prisma.appointment.delete({
+      const record = await prisma.appointment.findMany({
         where: {
-          id: parseInt(req.query.id),
-          userId: parseInt(req.query.userId),
-        },
-      });
-      return res.status(200).json({ mess: "Deleted" });
-    } catch (error) {
-      console.log(error);
-    }
-  });
-  
-  router.get("/get_single_appointment", async (req, res) => {
-    try {
-      const record = await prisma.appointment.findUnique({
-        where: {
-          id: parseInt(req.query.id),
           userId: parseInt(req.query.userId),
         },
       });
@@ -100,7 +82,7 @@ router.post("/create", async (req, res) => {
           time: req.body.time,
           location: req.body.location,
           coach: req.body.coach,
-          notes: req.body.note,
+          notes: req.body.notes,
         },
       });
       return res.status(200).send(record);

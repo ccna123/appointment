@@ -1,38 +1,41 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { DetailCard } from "../component/DetailCard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { DELETE_APPOINTMENT } from "../mutate/appointMutate";
-import { useMutation, useQuery } from "@apollo/client";
-import { GET_APPOINTMENTS } from "../queries/appointQuery";
+import axios from "axios";
 import useDetail from "../hooks/useDetails";
 import notify from "../ultil/notify";
 import Title from "../component/TItle/Title";
 
 export const Detail = () => {
-  const { loading, error, data } = useQuery(GET_APPOINTMENTS);
-  const [deleteAppointment] = useMutation(DELETE_APPOINTMENT);
-  const details = useDetail(loading, error, data);
+  const { id: userId } = JSON.parse(localStorage.getItem("user")).user;
+  const [refresh, setRefresh] = useState(false);
+  const details = useDetail(refresh);
 
   const handleDeleteAppointment = async (id) => {
-    await deleteAppointment({
-      variables: { id: id },
-      update: (cache, { data }) => {
-        const { appointments } = cache.readQuery({
-          query: GET_APPOINTMENTS,
-        });
-        cache.writeQuery({
-          query: GET_APPOINTMENTS,
-          data: {
-            appointments: appointments.filter(
-              (appointment) => appointment.id !== id
-            ),
-          },
-        });
-      },
-    });
-    notify("Delete successfully", "error");
+    try {
+      await axios.delete(
+        `${process.env.REACT_APP_BACKEND_URL}appoint/delete?id=${id}&userId=${userId}`
+      );
+      notify("Delete successfully", "error");
+      setRefresh((prev) => !prev);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  const handleUpdateAppointment = async (itemId, userId, singleAppoint) => {
+    try {
+      await axios.put(
+        `${process.env.REACT_APP_BACKEND_URL}appoint/update?id=${itemId}&userId=${userId}`,
+        singleAppoint
+      );
+      setRefresh((prev) => !prev);
+      notify("Edit successfully", "success");
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
@@ -52,6 +55,7 @@ export const Detail = () => {
               key={index}
               item={item}
               handleDeleteAppointment={handleDeleteAppointment}
+              handleUpdateAppointment={handleUpdateAppointment}
             />
           );
         })
