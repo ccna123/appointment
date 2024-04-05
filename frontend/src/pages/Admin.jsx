@@ -5,10 +5,11 @@ import "react-toastify/dist/ReactToastify.css";
 import notify from "../ultil/notify";
 import Title from "../component/TItle/Title";
 import AppointmentItem from "../component/Appointment/AppointmentItem";
-import AppontmentContainer from "../component/Appointment/AppontmentContainer";
+import AppontmentDetailContainer from "../component/Appointment/AppontmentDetailContainer";
 import axios from "axios";
 import Button from "../component/Button/Button";
 import handleLogout from "../helper/Logout";
+import AppointmentContainer from "../component/Appointment/AppointmentContainer";
 
 export const Admin = () => {
   const [data, setData] = useState([{}]);
@@ -53,23 +54,20 @@ export const Admin = () => {
           Logout
         </Button>
       </div>
-      <div className="grid grid-cols-12 items-center p-2 bg-white rounded-md my-4 lg:w-[50%] mx-auto font-bold text-xl">
-        <p className="col-span-2">No.</p>
-        <p className="col-span-4">Cus. Name</p>
-        <p className="col-span-4">Content</p>
-      </div>
-      <AppontmentContainer>
-        {data.map((appoint, index) => {
-          return (
-            <AppointmentItem
-              key={appoint.id}
-              appoint={appoint}
-              index={index}
-              handleConfirm={handleConfirm}
-            />
-          );
-        })}
-      </AppontmentContainer>
+      <AppointmentContainer>
+        <AppontmentDetailContainer>
+          {data.map((appoint, index) => {
+            return (
+              <AppointmentItem
+                key={appoint.id}
+                appoint={appoint}
+                index={index}
+                handleConfirm={handleConfirm}
+              />
+            );
+          })}
+        </AppontmentDetailContainer>
+      </AppointmentContainer>
     </div>
   );
 };

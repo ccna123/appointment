@@ -4,7 +4,7 @@ import Button from "../Button/Button";
 const AppointmentItem = ({ appoint, index, handleConfirm }) => {
   return (
     <section>
-      <div className="grid grid-cols-12 items-center p-2 bg-white rounded-md my-4 lg:w-[50%] mx-auto ">
+      <div className="grid grid-cols-12 items-center p-2 bg-white rounded-md my-4 lg:w-[60%] mx-auto ">
         <p className="col-span-2">{index + 1}</p>
         <p className="col-span-4">{appoint.user?.name}</p>
         <div className=" col-span-6 md:col-span-4 gap-1">
