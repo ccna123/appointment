@@ -1,33 +1,41 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { coaches, times } from "../data/data";
-import { ToastContainer, toast } from "react-toastify";
+import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useMutation, useQuery } from "@apollo/client";
-import { EDIT_APPOINTMENT } from "../mutate/appointMutate";
-import { GET_SINGLE_APPOINTMENTS } from "../queries/appointQuery";
+
 import Button from "./Button/Button";
 import Select from "./Select/Select";
 import Input from "./Input/Input";
-import useSingleAppoint from "../hooks/useSingleAppoint";
-import notify from "../ultil/notify";
 import Title from "./TItle/Title";
 import TextArea from "./TextArea/TextArea";
+import axios from "axios";
 
-export const ModalEdit = ({ setToggleModal, toggleModal, itemId }) => {
-  const [editAppointment] = useMutation(EDIT_APPOINTMENT);
-  const { loading, error, data } = useQuery(GET_SINGLE_APPOINTMENTS, {
-    variables: { id: itemId },
-  });
-  const [singleAppoint, setSingleAppoint] = useSingleAppoint(
-    loading,
-    error,
-    data
-  );
+export const ModalEdit = ({
+  setToggleModal,
+  toggleModal,
+  itemId,
+  handleUpdateAppointment,
+}) => {
+  const { id: userId } = JSON.parse(localStorage.getItem("user")).user;
+  const [singleAppoint, setSingleAppoint] = useState([{}]);
 
-  const handleUpdateAppointment = async () => {
-    setToggleModal(false);
-    notify("Edit successfully", "success");
+  const onUpdate = async (itemId, userId) => {
+    handleUpdateAppointment(itemId, userId, singleAppoint);
   };
+
+  useEffect(() => {
+    const fetchSingleAppoint = async () => {
+      try {
+        const res = await axios.get(
+          `${process.env.REACT_APP_BACKEND_URL}appoint/getSingleAppoint?id=${itemId}&userId=${userId}`
+        );
+        setSingleAppoint(res.data);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+    fetchSingleAppoint();
+  }, [itemId]);
 
   return (
     <div className="w-full min-h-screen overflow-hidden absolute top-0 left-0 bg-gray-600/50">
@@ -127,7 +135,7 @@ export const ModalEdit = ({ setToggleModal, toggleModal, itemId }) => {
         </div>
         <TextArea
           onChange={(e) =>
-            setSingleAppoint({ ...singleAppoint, note: e.target.value })
+            setSingleAppoint({ ...singleAppoint, notes: e.target.value })
           }
           value={singleAppoint.notes}
           className="p-2 border-2 focus:outline-none resize-none w-full mt-4 rounded-md min-h-[100px]"
@@ -136,7 +144,7 @@ export const ModalEdit = ({ setToggleModal, toggleModal, itemId }) => {
         />
 
         <Button
-          onClick={handleUpdateAppointment}
+          onClick={() => onUpdate(itemId, userId)}
           className="mt-2 bg-green-500  hover:bg-green-700"
         >
           Save

@@ -3,18 +3,16 @@ import { Link, useNavigate } from "react-router-dom";
 import { coaches, times } from "../data/data";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import { useMutation } from "@apollo/client";
-import { ADD_APPOINTMENT } from "../mutate/appointMutate";
 import Button from "../component/Button/Button";
 import Input from "../component/Input/Input";
 import Select from "../component/Select/Select";
 import notify from "../ultil/notify";
 import Title from "../component/TItle/Title";
 import TextArea from "../component/TextArea/TextArea";
+import axios from "axios";
 
 export const Main = () => {
   const navigate = useNavigate();
-  const [addAppointment] = useMutation(ADD_APPOINTMENT);
   const [formData, setformData] = useState({
     date: "",
     selectedTime: "",
@@ -42,18 +40,29 @@ export const Main = () => {
       notify("Please fill all the fields", "warning");
       return;
     }
-    await addAppointment({
-      variables: {
+
+    try {
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}appoint/create`, {
         userId: userId,
         date: date,
-        time: selectedTime,
+        selectedTime: selectedTime,
         course: course,
         location: location,
-        notes: note,
+        note: note,
         coach: coaches[Math.floor(Math.random() * coaches.length)],
-      },
-    });
-    notify("Make appointment successfully", "success");
+      });
+      notify("Make appointment successfully", "success");
+      setformData({
+        date: "",
+        selectedTime: "",
+        course: "",
+        location: "",
+        note: "",
+      });
+    } catch (error) {
+      console.error(error);
+      notify("Failed to create appointment", "error");
+    }
   };
 
   const handleLogout = async () => {
@@ -136,7 +145,7 @@ export const Main = () => {
         value={formData.note}
         className="border-2 focus:outline-none resize-none w-full mt-4 rounded-md min-h-[100px] p-2"
         cols="30"
-        rows="30"
+        rows="5"
         name="note"
       />
       <Button
