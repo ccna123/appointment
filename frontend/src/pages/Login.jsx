@@ -49,7 +49,9 @@ const Login = () => {
         setStatus(401);
         setFormData("");
       }
-    } catch (error) {}
+    } catch (error) {
+      console.error(error);
+    }
   };
 
   return (
