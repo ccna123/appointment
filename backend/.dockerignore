@@ -6,3 +6,6 @@ Dockerfile
 .dockerignore
 tests
 README.md
+appspec.yaml
+scripts/
+data.js
