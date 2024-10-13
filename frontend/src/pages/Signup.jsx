@@ -5,7 +5,7 @@ import Button from "../component/Button/Button";
 import Input from "../component/Input/Input";
 import ResMess from "../component/ResponseMessage/ResMess";
 
-const Login = () => {
+const Signup = () => {
   const [status, setStatus] = useState(null);
   const [resMess, setResMess] = useState("");
   const navigate = useNavigate();
@@ -13,6 +13,8 @@ const Login = () => {
   const [formData, setFormData] = useState({
     email: "",
     password: "",
+    name: "",
+    role: "user",
   });
 
   const handleInputChange = (name, value) => {
@@ -21,65 +23,24 @@ const Login = () => {
       [name]: value,
     });
   };
-  const handleLogin = async () => {
+  const handleSignUp = async () => {
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}user/login`,
+        `${process.env.REACT_APP_BACKEND_URL}user/signup`,
         {
           email: formData.email,
           password: formData.password,
+          userName: formData.name,
+          role: formData.role,
         }
       );
-      if (res.data.status === 200) {
+      if (res.data.status === 201) {
         setResMess(res.data.mess);
-        setStatus(200);
+        setStatus(201);
         localStorage.setItem("user", JSON.stringify(res.data));
-
-        if (res.data.user.role === "admin") {
-          setTimeout(() => {
-            navigate("/admin");
-          }, 1000);
-        } else {
-          setTimeout(() => {
-            navigate("/main");
-          }, 1000);
-        }
       } else {
         setResMess(res.data.mess);
-        setStatus(401);
-        setFormData("");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleSignin = async () => {
-    try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}user/signin`,
-        {
-          email: formData.email,
-          password: formData.password,
-        }
-      );
-      if (res.data.status === 200) {
-        setResMess(res.data.mess);
-        setStatus(200);
-        localStorage.setItem("user", JSON.stringify(res.data));
-
-        if (res.data.user.role === "admin") {
-          setTimeout(() => {
-            navigate("/admin");
-          }, 1000);
-        } else {
-          setTimeout(() => {
-            navigate("/main");
-          }, 1000);
-        }
-      } else {
-        setResMess(res.data.mess);
-        setStatus(401);
+        setStatus(409);
         setFormData("");
       }
     } catch (error) {
@@ -89,7 +50,15 @@ const Login = () => {
 
   return (
     <div className="bg-white rounded-md h-fit md:w-[50%] p-4 mt-20 mx-4">
-      <h1 className="text-4xl font-bold">Login</h1>
+      <h1 className="text-4xl font-bold">Sign up</h1>
+      <Input
+        onChange={(e) => handleInputChange(e.target.name, e.target.value)}
+        value={formData.name}
+        type="text"
+        name={"name"}
+        placeholder="Name..."
+        className={"p-2 mt-3"}
+      />
       <Input
         onChange={(e) => handleInputChange(e.target.name, e.target.value)}
         value={formData.email}
@@ -107,20 +76,20 @@ const Login = () => {
         className={"p-2 my-3"}
       />
       <Button
-        onClick={handleLogin}
-        className={"bg-blue-500 mt-4 hover:bg-blue-700"}
-      >
-        Login
-      </Button>
-      <Button
-        onClick={() => navigate("/signup")}
+        onClick={handleSignUp}
         className={"bg-green-500 mt-4 hover:bg-green-700"}
       >
-        Sign up
+        Confirm
+      </Button>
+      <Button
+        onClick={() => navigate("/")}
+        className={"bg-blue-500 mt-4 hover:bg-blue-700"}
+      >
+        Go to login
       </Button>
       {resMess && <ResMess mess={resMess} status={status} />}
     </div>
   );
 };
 
-export default Login;
+export default Signup;

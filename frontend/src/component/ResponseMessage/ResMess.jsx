@@ -6,7 +6,7 @@ const ResMess = ({ mess, status }) => {
     <p
       className={twMerge(
         "text-lg mt-4 font-bold",
-        `bg-${status === 200 ? "green" : "red"}-500`
+        `bg-${status === 200 || status === 201 ? "green" : "red"}-500`
       )}
     >
       {mess}

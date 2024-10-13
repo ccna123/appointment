@@ -5,6 +5,7 @@ import { Main } from "./pages/Main";
 import { Detail } from "./pages/Detail";
 import { Admin } from "./pages/Admin";
 import React from "react";
+import Signup from "./pages/Signup";
 
 function App() {
   return (
@@ -12,6 +13,7 @@ function App() {
       <BrowserRouter router>
         <Routes>
           <Route path="/" element={<Login />} />
+          <Route path="/signup" element={<Signup />} />
           <Route path="/main" element={<Main />} />
           <Route path="/detail/:userId" element={<Detail />} />
           <Route path="/admin" element={<Admin />} />

@@ -9,7 +9,7 @@ router.get("/getAllUserAppoint", async (req, res) => {
         user: {
           select: {
             id: true,
-            name: true,
+            userName: true,
             role: true,
           },
         },
