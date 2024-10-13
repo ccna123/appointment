@@ -39,7 +39,7 @@ export const Detail = () => {
   };
 
   return (
-    <div className="bg-white overflow-y-scroll rounded-md my-4 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] flex items-start flex-col p-4 w-full mx-2 md:mx-0 md:w-[30%]">
+    <div className="bg-white overflow-y-scroll rounded-md my-4 shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] flex items-start flex-col p-4 w-full mx-2 md:mx-0 md:w-[50%]">
       <ToastContainer />
       <div className="flex items-center gap-2">
         <Link to="/main" className="fa-solid fa-arrow-left" />

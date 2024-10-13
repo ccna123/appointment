@@ -33,7 +33,7 @@ export const Main = () => {
   const {
     id: userId,
     role: userRole,
-    name: userName,
+    userName: userName,
   } = JSON.parse(localStorage.getItem("user")).user;
 
   const handleMakeAppointment = async () => {
@@ -79,6 +79,7 @@ export const Main = () => {
           >
             {userName}
           </Link>
+
           <Button
             onClick={() => handleLogout(navigate)}
             className="bg-red-500 hover:bg-red-700 text-sm p-1"
