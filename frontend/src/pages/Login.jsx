@@ -6,6 +6,8 @@ import Input from "../component/Input/Input";
 import ResMess from "../component/ResponseMessage/ResMess";
 
 const Login = () => {
+  console.log(process.env.REACT_APP_BACKEND_URL);
+
   const [status, setStatus] = useState(null);
   const [resMess, setResMess] = useState("");
   const navigate = useNavigate();
@@ -87,6 +89,20 @@ const Login = () => {
     }
   };
 
+  const handleTest = async () => {
+    try {
+      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}`);
+      if (res.data.status === 200) {
+        setResMess(res.data.mess);
+        setStatus(200);
+        console.log(res);
+      }
+    } catch (error) {
+      console.log(error);
+
+    }
+  };
+
   return (
     <div className="bg-white rounded-md h-fit md:w-[50%] p-4 mt-20 mx-4">
       <h1 className="text-4xl font-bold">Login</h1>
@@ -117,6 +133,12 @@ const Login = () => {
         className={"bg-green-500 mt-4 hover:bg-green-700"}
       >
         Sign up
+      </Button>
+      <Button
+        onClick={handleTest}
+        className={"bg-red-500 mt-4 hover:bg-red-700"}
+      >
+        Test
       </Button>
       {resMess && <ResMess mess={resMess} status={status} />}
     </div>

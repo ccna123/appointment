@@ -24,6 +24,7 @@ const Signup = () => {
     });
   };
   const handleSignUp = async () => {
+
     try {
       const res = await axios.post(
         `${process.env.REACT_APP_BACKEND_URL}user/signup`,

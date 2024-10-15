@@ -11,6 +11,10 @@ RUN npm ci --only=production
 # Copy the application source code
 COPY . .
 
+ARG REACT_APP_BACKEND_URL
+
+ENV REACT_APP_BACKEND_URL=${REACT_APP_BACKEND_URL}
+
 # Build the application for production
 RUN npm run build
 

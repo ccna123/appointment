@@ -10,9 +10,8 @@ const adminRoute = require("./routes/Admin.js");
 app.use(cors());
 app.use(express.json());
 
-app.get("/", (req, res) => {
-  res.set("Content-Type", "text/plain");
-  res.status(200).send("Server Healthy");
+app.get("/health", (req, res) => {
+  return res.json({ mess: "Healthy", status: 200 });
 });
 app.use("/appoint", appointRoute);
 app.use("/user", userRoute);
