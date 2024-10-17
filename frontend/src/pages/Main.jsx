@@ -10,7 +10,6 @@ import notify from "../ultil/notify";
 import Title from "../component/TItle/Title";
 import TextArea from "../component/TextArea/TextArea";
 import axios from "axios";
-import handleLogout from "../helper/Logout";
 
 export const Main = () => {
   const navigate = useNavigate();
@@ -34,7 +33,7 @@ export const Main = () => {
     id: userId,
     role: userRole,
     userName: userName,
-  } = JSON.parse(localStorage.getItem("user")).user;
+  } = JSON.parse(localStorage.getItem("user"));
 
   const handleMakeAppointment = async () => {
     if (!date || !selectedTime || !course || !location) {
@@ -64,6 +63,11 @@ export const Main = () => {
       console.error(error);
       notify("Failed to create appointment", "error");
     }
+  };
+
+  const handleLogout = async () => {
+    localStorage.clear();
+    navigate("/");
   };
 
   return (
@@ -107,9 +111,8 @@ export const Main = () => {
             onClick={(e) =>
               handleInputChange("selectedTime", e.target.textContent)
             }
-            className={`${
-              time === selectedTime ? "bg-black text-white" : "text-black"
-            } border-2 py-2 rounded-md hover:bg-black hover:text-white`}
+            className={`${time === selectedTime ? "bg-black text-white" : "text-black"
+              } border-2 py-2 rounded-md hover:bg-black hover:text-white`}
           >
             {time}
           </p>

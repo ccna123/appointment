@@ -4,6 +4,9 @@ import { useNavigate } from "react-router-dom";
 import Button from "../component/Button/Button";
 import Input from "../component/Input/Input";
 import ResMess from "../component/ResponseMessage/ResMess";
+import { AuthenticationDetails, CognitoUser } from "amazon-cognito-identity-js";
+import userPool from "../userpool"
+import { jwtDecode } from "jwt-decode";
 
 const Login = () => {
 
@@ -23,83 +26,46 @@ const Login = () => {
     });
   };
   const handleLogin = async () => {
-    try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}user/login`,
-        {
-          email: formData.email,
-          password: formData.password,
-        }
-      );
-      if (res.data.status === 200) {
-        setResMess(res.data.mess);
-        setStatus(200);
-        localStorage.setItem("user", JSON.stringify(res.data));
-
-        if (res.data.user.role === "admin") {
-          setTimeout(() => {
-            navigate("/admin");
-          }, 1000);
-        } else {
-          setTimeout(() => {
-            navigate("/main");
-          }, 1000);
-        }
-      } else {
-        setResMess(res.data.mess);
-        setStatus(401);
-        setFormData("");
-      }
-    } catch (error) {
-      console.error(error);
+    if (!formData.email || !formData.password) {
+      setResMess("Email and password are required")
+      setStatus(400)
+      return
     }
-  };
 
-  const handleSignin = async () => {
-    try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}user/signin`,
-        {
-          email: formData.email,
-          password: formData.password,
+    const authenticationDetails = new AuthenticationDetails({
+      Username: formData.email,
+      Password: formData.password
+    })
+
+    const user = new CognitoUser({
+      Username: formData.email,
+      Pool: userPool
+    })
+
+    user.authenticateUser(authenticationDetails, {
+      onSuccess: (result) => {
+        console.log("Login successfull!");
+        const payload = jwtDecode(JSON.stringify(result.getIdToken()));
+
+        setResMess("Login successfull!")
+        setStatus(200)
+        const user = {
+          userId: payload["sub"],
+          userRole: payload["custom:role"],
+          userName: payload["name"]
         }
-      );
-      if (res.data.status === 200) {
-        setResMess(res.data.mess);
-        setStatus(200);
-        localStorage.setItem("user", JSON.stringify(res.data));
+        localStorage.setItem("user", JSON.stringify(user))
+        setTimeout(() => {
+          navigate("/main")
+        }, 2000);
+      },
+      onFailure: (err) => {
+        console.log(err);
+        setResMess(err.message)
+        setStatus(401)
 
-        if (res.data.user.role === "admin") {
-          setTimeout(() => {
-            navigate("/admin");
-          }, 1000);
-        } else {
-          setTimeout(() => {
-            navigate("/main");
-          }, 1000);
-        }
-      } else {
-        setResMess(res.data.mess);
-        setStatus(401);
-        setFormData("");
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleTest = async () => {
-    try {
-      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}`);
-      if (res.data.status === 200) {
-        setResMess(res.data.mess);
-        setStatus(200);
-        console.log(res);
-      }
-    } catch (error) {
-      console.log(error);
-
-    }
+    })
   };
 
   return (

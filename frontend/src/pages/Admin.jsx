@@ -8,7 +8,6 @@ import AppointmentItem from "../component/Appointment/AppointmentItem";
 import AppontmentDetailContainer from "../component/Appointment/AppontmentDetailContainer";
 import axios from "axios";
 import Button from "../component/Button/Button";
-import handleLogout from "../helper/Logout";
 import AppointmentContainer from "../component/Appointment/AppointmentContainer";
 import AppointmentSearch from "../component/Appointment/AppointmentSearch";
 
@@ -70,6 +69,11 @@ export const Admin = () => {
     };
     fetchAllAppoint();
   }, [refresh]);
+
+  const handleLogout = async () => {
+    localStorage.clear();
+    navigate("/");
+  };
 
   return (
     <div className="my-10 w-full p-4">
