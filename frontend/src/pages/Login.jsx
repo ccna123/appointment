@@ -6,7 +6,6 @@ import Input from "../component/Input/Input";
 import ResMess from "../component/ResponseMessage/ResMess";
 
 const Login = () => {
-  console.log(process.env.REACT_APP_BACKEND_URL);
 
   const [status, setStatus] = useState(null);
   const [resMess, setResMess] = useState("");
@@ -133,12 +132,6 @@ const Login = () => {
         className={"bg-green-500 mt-4 hover:bg-green-700"}
       >
         Sign up
-      </Button>
-      <Button
-        onClick={handleTest}
-        className={"bg-red-500 mt-4 hover:bg-red-700"}
-      >
-        Test
       </Button>
       {resMess && <ResMess mess={resMess} status={status} />}
     </div>

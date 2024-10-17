@@ -26,4 +26,4 @@ COPY --from=build /app /app
 EXPOSE 4000
 
 # Start the application with migrations
-CMD ["sh", "-c", "npx prisma generate && npm start"]
+CMD ["sh", "-c", "npx prisma generate && npx prisma migrate dev --name init && npm start"]
