@@ -42,15 +42,22 @@ export const Main = () => {
     }
 
     try {
-      await axios.post(`${process.env.REACT_APP_BACKEND_URL}appoint/create`, {
-        userId: userId,
-        date: date,
-        selectedTime: selectedTime,
-        course: course,
-        location: location,
-        note: note,
-        coach: coaches[Math.floor(Math.random() * coaches.length)],
-      });
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}appoint/create`,
+        {
+          userId: userId,
+          date: date,
+          selectedTime: selectedTime,
+          course: course,
+          location: location,
+          note: note,
+          coach: coaches[Math.floor(Math.random() * coaches.length)],
+        },
+        {
+          headers: {
+            Authorization: localStorage.getItem("CognitoIdentityServiceProvider.22sl1bv0hk61hme8lrujk83asp.17345ab8-b091-7027-ff4d-9d8c840a28ce.accessToken")
+          }
+        }
+      );
       notify("Make appointment successfully", "success");
       setformData({
         date: "",

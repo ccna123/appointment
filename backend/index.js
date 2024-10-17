@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const { PrismaClient } = require("@prisma/client");
+const verifyToken = require("./middleware/verifyToken.js")
 
 const app = express();
 const appointRoute = require("./routes/Appoint.js");
@@ -10,7 +11,7 @@ const adminRoute = require("./routes/Admin.js");
 app.use(cors());
 app.use(express.json());
 
-app.get("/health", (req, res) => {
+app.get("/health", verifyToken, (req, res) => {
   return res.json({ mess: "Healthy", status: 200 });
 });
 app.use("/appoint", appointRoute);
