@@ -11,7 +11,7 @@ datasource db {
 }
 
 model User {
-  id          Int           @id @default(autoincrement())
+  id          String        @id
   userName    String
   email       String        @unique
   password    String
@@ -21,7 +21,7 @@ model User {
 
 model Appointment {
   id       Int    @id @default(autoincrement())
-  userId   Int
+  userId   String
   course   String
   location String
   coach    String

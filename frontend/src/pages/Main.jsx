@@ -22,6 +22,13 @@ export const Main = () => {
   });
   const { date, selectedTime, course, location, note } = formData;
 
+  const {
+    userId,
+    userRole,
+    userName,
+  } = JSON.parse(localStorage.getItem("user"));
+
+
   const handleInputChange = (name, value) => {
     setformData({
       ...formData,
@@ -29,22 +36,15 @@ export const Main = () => {
     });
   };
 
-  const {
-    id: userId,
-    role: userRole,
-    userName: userName,
-  } = JSON.parse(localStorage.getItem("user"));
-
   const handleMakeAppointment = async () => {
     if (!date || !selectedTime || !course || !location) {
       notify("Please fill all the fields", "warning");
       return;
     }
-
     try {
       await axios.post(`${process.env.REACT_APP_BACKEND_URL}appoint/create`,
         {
-          userId: userId,
+          userId,
           date: date,
           selectedTime: selectedTime,
           course: course,
@@ -54,7 +54,7 @@ export const Main = () => {
         },
         {
           headers: {
-            Authorization: localStorage.getItem("CognitoIdentityServiceProvider.22sl1bv0hk61hme8lrujk83asp.17345ab8-b091-7027-ff4d-9d8c840a28ce.accessToken")
+            Authorization: `Bearer ${localStorage.getItem("CognitoIdentityServiceProvider.22sl1bv0hk61hme8lrujk83asp.17345ab8-b091-7027-ff4d-9d8c840a28ce.accessToken")}`
           }
         }
       );

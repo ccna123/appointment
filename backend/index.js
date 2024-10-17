@@ -14,9 +14,9 @@ app.use(express.json());
 app.get("/health", verifyToken, (req, res) => {
   return res.json({ mess: "Healthy", status: 200 });
 });
-app.use("/appoint", appointRoute);
-app.use("/user", userRoute);
-app.use("/admin", adminRoute);
+app.use("/appoint", verifyToken, appointRoute);
+app.use("/user", verifyToken, userRoute);
+app.use("/admin", verifyToken, adminRoute);
 
 const prisma = new PrismaClient();
 
