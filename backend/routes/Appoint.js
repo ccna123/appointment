@@ -27,7 +27,7 @@ router.delete("/delete", async (req, res) => {
     await prisma.appointment.delete({
       where: {
         id: parseInt(req.query.id),
-        userId: parseInt(req.query.userId),
+        userId: req.query.userId,
       },
     });
     return res.status(200).json({ mess: "Deleted" });
@@ -41,7 +41,7 @@ router.get("/getSingleAppoint", async (req, res) => {
     const record = await prisma.appointment.findUnique({
       where: {
         id: parseInt(req.query.id),
-        userId: parseInt(req.query.userId),
+        userId: req.query.userId,
       },
     });
     if (record) {
@@ -57,7 +57,7 @@ router.get("/getAllAppoint", async (req, res) => {
   try {
     const record = await prisma.appointment.findMany({
       where: {
-        userId: parseInt(req.query.userId),
+        userId: req.query.userId,
       },
     });
     if (record) {
@@ -74,7 +74,7 @@ router.put("/update", async (req, res) => {
     const record = await prisma.appointment.update({
       where: {
         id: parseInt(req.query.id),
-        userId: parseInt(req.query.userId),
+        userId: req.query.userId,
       },
       data: {
         course: req.body.course,

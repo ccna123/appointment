@@ -53,9 +53,7 @@ export const Main = () => {
           coach: coaches[Math.floor(Math.random() * coaches.length)],
         },
         {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("CognitoIdentityServiceProvider.22sl1bv0hk61hme8lrujk83asp.17345ab8-b091-7027-ff4d-9d8c840a28ce.accessToken")}`
-          }
+          withCredentials: true
         }
       );
       notify("Make appointment successfully", "success");

@@ -9,14 +9,17 @@ import notify from "../ultil/notify";
 import Title from "../component/TItle/Title";
 
 export const Detail = () => {
-  const { id: userId } = JSON.parse(localStorage.getItem("user")).user;
+  const { userId } = JSON.parse(localStorage.getItem("user"));
   const [refresh, setRefresh] = useState(false);
   const details = useDetail(refresh);
 
   const handleDeleteAppointment = async (id) => {
     try {
       await axios.delete(
-        `${process.env.REACT_APP_BACKEND_URL}appoint/delete?id=${id}&userId=${userId}`
+        `${process.env.REACT_APP_BACKEND_URL}appoint/delete?id=${id}&userId=${userId}`,
+        {
+          withCredentials: true
+        }
       );
       notify("Delete successfully", "error");
       setRefresh((prev) => !prev);
@@ -29,7 +32,10 @@ export const Detail = () => {
     try {
       await axios.put(
         `${process.env.REACT_APP_BACKEND_URL}appoint/update?id=${itemId}&userId=${userId}`,
-        singleAppoint
+        singleAppoint,
+        {
+          withCredentials: true
+        }
       );
       setRefresh((prev) => !prev);
       notify("Edit successfully", "success");

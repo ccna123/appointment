@@ -43,9 +43,13 @@ const Login = () => {
     })
 
     user.authenticateUser(authenticationDetails, {
-      onSuccess: (result) => {
-        console.log("Login successfull!");
+      onSuccess: async (result) => {
+        localStorage.clear()
         const payload = jwtDecode(JSON.stringify(result.getIdToken()));
+
+        const idToken = result.getIdToken().jwtToken
+        const accessToken = result.getAccessToken().jwtToken
+        const refreshToken = result.getRefreshToken().token
 
         setResMess("Login successfull!")
         setStatus(200)
@@ -54,7 +58,16 @@ const Login = () => {
           userRole: payload["custom:role"],
           userName: payload["name"]
         }
+
+        await axios.post(`${process.env.REACT_APP_BACKEND_URL}auth/tokens`, {
+          idToken, accessToken, refreshToken
+        }, {
+          withCredentials: true
+        })
+
         localStorage.setItem("user", JSON.stringify(user))
+        await axios.post(`${process.env.REACT_APP_BACKEND_URL}user/login`, { userId: user.userId }, { withCredentials: true }
+        )
         setTimeout(() => {
           navigate("/main")
         }, 2000);

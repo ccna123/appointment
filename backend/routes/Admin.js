@@ -52,9 +52,9 @@ router.post("/searchAppoint", async (req, res) => {
           { status: { contains: keyword } },
         ],
       },
-      include: {
-        user: { select: { name: true } },
-      },
+      // include: {
+      //   user: { select: { name: true } },
+      // },
     });
     return res.status(200).send(record);
   } catch (error) {

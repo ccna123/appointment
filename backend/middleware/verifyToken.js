@@ -20,7 +20,9 @@ function getKey(header, callback) {
 //middleware to verify access token
 const verifyToken = (req, res, next) => {
     try {
-        const token = req.headers.authorization?.split(' ')[1]
+        const token = req.cookies.accessToken
+        // console.log(req.cookies.accessToken);
+
 
         if (!token) {
             return res.status(401).json({ message: "Missing token" })

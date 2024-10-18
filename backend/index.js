@@ -8,43 +8,30 @@ const app = express();
 const appointRoute = require("./routes/Appoint.js");
 const userRoute = require("./routes/User.js");
 const adminRoute = require("./routes/Admin.js");
-app.use(cors());
-app.use(express.json());
+const authRoute = require("./routes/Auth.js");
+const cookieParser = require("cookie-parser");
 
-app.get("/health", verifyToken, (req, res) => {
+const corsOption = {
+  origin: 'http://localhost:3000',
+  credentials: true,
+}
+app.use(cors(corsOption));
+app.use(express.json());
+app.use(cookieParser())
+
+app.get("/health", (req, res) => {
   return res.json({ mess: "Healthy", status: 200 });
 });
 app.use("/appoint", verifyToken, appointRoute);
 app.use("/user", verifyToken, userRoute);
 app.use("/admin", verifyToken, adminRoute);
+app.use("/auth", authRoute);
 
 const prisma = new PrismaClient();
-
-async function createDefaultUser() {
-  const defaultEmail = "admin@abc.com"; // Use a unique email for your default user
-  const defaultUser = await prisma.user.findUnique({
-    where: { email: defaultEmail },
-  });
-
-  if (!defaultUser) {
-    await prisma.user.create({
-      data: {
-        userName: "admin",
-        email: defaultEmail,
-        password: "123", // Ensure to hash passwords in a real app
-        role: "admin",
-      },
-    });
-    console.log("admin created");
-  } else {
-    console.log("admin already exists");
-  }
-}
 
 // Start server and create default user
 const startServer = async () => {
   await prisma.$connect();
-  await createDefaultUser();
 
   const PORT = process.env.PORT || 4000;
   app.listen(PORT, () => {
