@@ -8,7 +8,9 @@ export default function useDetail(refesh) {
   const [details, setDetails] = useState([]);
   useEffect(() => {
     const get_appointment = async () => {
-      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}appoint/getAllAppoint?userId=${userId}`)
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_GATEWAY_URL}?userId=${userId}`,
+      )
       setDetails(res.data);
     };
     get_appointment();
