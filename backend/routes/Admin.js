@@ -53,7 +53,7 @@ router.post("/searchAppoint", async (req, res) => {
         ],
       },
       include: {
-        user: { select: { name: true } },
+        user: { select: { userName: true } },
       },
     });
     return res.status(200).send(record);
