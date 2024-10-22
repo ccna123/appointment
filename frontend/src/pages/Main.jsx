@@ -43,7 +43,7 @@ export const Main = () => {
     }
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_GATEWAY_URL}/create`, {
+      await axios.post(`${process.env.REACT_APP_APPOINT_GATEWAY_URL}`, {
         userId: userId,
         date: date,
         selectedTime: selectedTime,

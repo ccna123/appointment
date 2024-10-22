@@ -21,7 +21,7 @@ export const Admin = () => {
 
   const handleConfirm = async (appointId, userId) => {
     await axios.put(
-      `${process.env.REACT_APP_BACKEND_URL}admin/updateAppointStatus`,
+      `${process.env.REACT_APP_ADMIN_GATEWAY_URL}`,
       {
         appointId,
         userId,
@@ -48,7 +48,7 @@ export const Admin = () => {
         return null;
       }
       const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}admin/searchAppoint`,
+        `${process.env.REACT_APP_ADMIN_GATEWAY_URL}`,
         { keyword }
       );
       setData(res.data);
@@ -61,7 +61,7 @@ export const Admin = () => {
     const fetchAllAppoint = async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}admin/getAllUserAppoint`
+          `${process.env.REACT_APP_ADMIN_GATEWAY_URL}`
         );
         setData(res.data);
       } catch (error) {
@@ -95,7 +95,7 @@ export const Admin = () => {
           {data.map((appoint, index) => {
             return (
               <AppointmentItem
-                key={appoint.id}
+                keyItem={appoint.id}
                 appoint={appoint}
                 index={index}
                 handleConfirm={handleConfirm}
