@@ -6,6 +6,7 @@ import { Detail } from "./pages/Detail";
 import { Admin } from "./pages/Admin";
 import React from "react";
 import Signup from "./pages/Signup";
+import Verification from "./pages/Verification";
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
         <Routes>
           <Route path="/" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/verify/:email" element={<Verification />} />
           <Route path="/main" element={<Main />} />
           <Route path="/detail/:userId" element={<Detail />} />
           <Route path="/admin" element={<Admin />} />

@@ -9,14 +9,15 @@ import notify from "../ultil/notify";
 import Title from "../component/TItle/Title";
 
 export const Detail = () => {
-  const { id: userId } = JSON.parse(localStorage.getItem("user")).user;
+  const { userId } = JSON.parse(localStorage.getItem("user"));
   const [refresh, setRefresh] = useState(false);
   const details = useDetail(refresh);
+  const [toggleModal, setToggleModal] = useState(false);
 
-  const handleDeleteAppointment = async (id) => {
+  const handleDeleteAppointment = async (appointId) => {
     try {
       await axios.delete(
-        `${process.env.REACT_APP_APPOINT_GATEWAY_URL}?id=${id}&userId=${userId}`
+        `${process.env.REACT_APP_APPOINT_GATEWAY_URL}?appointId=${appointId}&userId=${userId}`
       );
       notify("Delete successfully", "error");
       setRefresh((prev) => !prev);
@@ -32,6 +33,7 @@ export const Detail = () => {
         singleAppoint
       );
       setRefresh((prev) => !prev);
+      setToggleModal(!toggleModal);
       notify("Edit successfully", "success");
     } catch (error) {
       console.error(error);
@@ -54,8 +56,11 @@ export const Detail = () => {
             <DetailCard
               key={index}
               item={item}
+              toggleModal={toggleModal}
+              setToggleModal={setToggleModal}
               handleDeleteAppointment={handleDeleteAppointment}
               handleUpdateAppointment={handleUpdateAppointment}
+
             />
           );
         })

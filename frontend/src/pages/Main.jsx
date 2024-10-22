@@ -11,6 +11,7 @@ import Title from "../component/TItle/Title";
 import TextArea from "../component/TextArea/TextArea";
 import axios from "axios";
 import handleLogout from "../helper/Logout";
+import { v4 as uuidv4 } from 'uuid'
 
 export const Main = () => {
   const navigate = useNavigate();
@@ -31,10 +32,10 @@ export const Main = () => {
   };
 
   const {
-    id: userId,
-    role: userRole,
+    userId: userId,
+    userRole: userRole,
     userName: userName,
-  } = JSON.parse(localStorage.getItem("user")).user;
+  } = JSON.parse(localStorage.getItem("user"));
 
   const handleMakeAppointment = async () => {
     if (!date || !selectedTime || !course || !location) {
@@ -45,6 +46,7 @@ export const Main = () => {
     try {
       await axios.post(`${process.env.REACT_APP_APPOINT_GATEWAY_URL}`, {
         userId: userId,
+        appointId: uuidv4(),
         date: date,
         selectedTime: selectedTime,
         course: course,

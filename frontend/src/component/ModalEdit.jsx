@@ -16,7 +16,7 @@ export const ModalEdit = ({
   itemId,
   handleUpdateAppointment,
 }) => {
-  const { id: userId } = JSON.parse(localStorage.getItem("user")).user;
+  const { userId } = JSON.parse(localStorage.getItem("user"));
   const [singleAppoint, setSingleAppoint] = useState([{}]);
 
   const onUpdate = async (itemId, userId) => {
@@ -27,7 +27,7 @@ export const ModalEdit = ({
     const fetchSingleAppoint = async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_BACKEND_URL}appoint/getSingleAppoint?id=${itemId}&userId=${userId}`
+          `${process.env.REACT_APP_APPOINT_GATEWAY_URL}?appointId=${itemId}&userId=${userId}`
         );
         setSingleAppoint(res.data);
       } catch (error) {

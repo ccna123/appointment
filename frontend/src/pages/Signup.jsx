@@ -1,9 +1,11 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Button from "../component/Button/Button";
 import Input from "../component/Input/Input";
 import ResMess from "../component/ResponseMessage/ResMess";
+import { CognitoUserAttribute } from "amazon-cognito-identity-js";
+import userPool from "../userpool";
+import axios from "axios";
 
 const Signup = () => {
   const [status, setStatus] = useState(null);
@@ -26,24 +28,35 @@ const Signup = () => {
   const handleSignUp = async () => {
 
     try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}user/signup`,
-        {
-          email: formData.email,
-          password: formData.password,
-          userName: formData.name,
-          role: formData.role,
+      const attributeList = [
+        new CognitoUserAttribute({ Name: 'email', Value: formData.email }),
+        new CognitoUserAttribute({ Name: 'name', Value: formData.name }),
+        new CognitoUserAttribute({ Name: 'custom:role', Value: formData.role })
+      ]
+
+      userPool.signUp(
+        formData.email,
+        formData.password,
+        attributeList,
+        null,
+        (err, data) => {
+          if (err) {
+            console.log(err);
+            setResMess(err.message)
+            setStatus(409)
+            setFormData({
+              email: "",
+              password: "",
+              name: "",
+              role: "user",
+            })
+            return
+          }
+          setResMess("Signup successfully! Please verify your email")
+          setStatus(201)
+          navigate(`/verify/${formData.email}`)
         }
-      );
-      if (res.data.status === 201) {
-        setResMess(res.data.mess);
-        setStatus(201);
-        localStorage.setItem("user", JSON.stringify(res.data));
-      } else {
-        setResMess(res.data.mess);
-        setStatus(409);
-        setFormData("");
-      }
+      )
     } catch (error) {
       console.error(error);
     }

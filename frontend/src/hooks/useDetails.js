@@ -3,7 +3,7 @@ import axios from 'axios'
 
 export default function useDetail(refesh) {
   const userId = JSON.parse(localStorage.getItem("user"))
-    ? JSON.parse(localStorage.getItem("user")).user.id
+    ? JSON.parse(localStorage.getItem("user")).userId
     : null;
   const [details, setDetails] = useState([]);
   useEffect(() => {
@@ -11,7 +11,6 @@ export default function useDetail(refesh) {
       const res = await axios.get(
         `${process.env.REACT_APP_APPOINT_GATEWAY_URL}?userId=${userId}`,
       )
-      console.log(res.data);
 
       setDetails(res.data);
     };

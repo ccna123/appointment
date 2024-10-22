@@ -4,11 +4,12 @@ import Button from "../component/Button/Button";
 
 export const DetailCard = ({
   item,
+  toggleModal,
+  setToggleModal,
   handleDeleteAppointment,
   handleUpdateAppointment,
 }) => {
   const [showNote, setShowNote] = useState(false);
-  const [toggleModal, setToggleModal] = useState(false);
 
   const convertDate = (date) => {
     const inputDate = date; // Your input date in "yyyy-MM-dd" format
@@ -49,13 +50,12 @@ export const DetailCard = ({
           <div key={index} className="flex items-center justify-between mx-4">
             <p className="text-slate-500 text-sm uppercase">{key}</p>
             <p
-              className={`${
-                item[key] === "waiting"
-                  ? "text-blue-600 font-bold"
-                  : item[key] === "confirmed"
+              className={`${item[key] === "waiting"
+                ? "text-blue-600 font-bold"
+                : item[key] === "confirmed"
                   ? "text-green-600 font-bold"
                   : ""
-              }`}
+                }`}
             >
               {key === "date" ? convertDate(item[key]) : item[key]}
             </p>
@@ -69,9 +69,8 @@ export const DetailCard = ({
         View Note
       </p>
       <p
-        className={`${
-          showNote ? "block overflow-y-scroll break-words h-[128px]" : "hidden"
-        } p-3`}
+        className={`${showNote ? "block overflow-y-scroll break-words h-[128px]" : "hidden"
+          } p-3`}
       >
         {item.notes}
       </p>
@@ -86,7 +85,7 @@ export const DetailCard = ({
 
         <Button
           className="bg-red-500 hover:bg-red-700"
-          onClick={() => handleDeleteAppointment(item.id)}
+          onClick={() => handleDeleteAppointment(item.appointId)}
         >
           <i className="fa-solid fa-trash"></i>
         </Button>
@@ -96,7 +95,7 @@ export const DetailCard = ({
           handleUpdateAppointment={handleUpdateAppointment}
           toggleModal={toggleModal}
           setToggleModal={setToggleModal}
-          itemId={item.id}
+          itemId={item.appointId}
         />
       )}
     </div>
