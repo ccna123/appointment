@@ -13,6 +13,7 @@ export const Detail = () => {
   const [refresh, setRefresh] = useState(false);
   const details = useDetail(refresh);
   const [toggleModal, setToggleModal] = useState(false);
+  const [selectedId, setSelectedId] = useState(null);
 
   const handleDeleteAppointment = async (appointId) => {
     try {
@@ -56,8 +57,10 @@ export const Detail = () => {
             <DetailCard
               key={index}
               item={item}
+              selectedId={selectedId}
               toggleModal={toggleModal}
               setToggleModal={setToggleModal}
+              setSelectedId={setSelectedId}
               handleDeleteAppointment={handleDeleteAppointment}
               handleUpdateAppointment={handleUpdateAppointment}
 

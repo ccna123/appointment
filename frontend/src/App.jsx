@@ -10,7 +10,7 @@ import Verification from "./pages/Verification";
 
 function App() {
   return (
-    <div className="App bg-gray-200 flex justify-center w-full min-h-screen">
+    <div className="App bg-gray-200 flex justify-center w-full min-h-screen relative">
       <BrowserRouter router>
         <Routes>
           <Route path="/" element={<Login />} />

@@ -5,7 +5,9 @@ import Button from "../component/Button/Button";
 export const DetailCard = ({
   item,
   toggleModal,
+  selectedId,
   setToggleModal,
+  setSelectedId,
   handleDeleteAppointment,
   handleUpdateAppointment,
 }) => {
@@ -72,12 +74,16 @@ export const DetailCard = ({
         className={`${showNote ? "block overflow-y-scroll break-words h-[128px]" : "hidden"
           } p-3`}
       >
-        {item.notes}
+        {item.note}
       </p>
 
       <div className="flex items-center justify-center mx-4 gap-3 mb-4">
         <Button
-          onClick={() => setToggleModal(!toggleModal)}
+          onClick={() => {
+            setToggleModal(!toggleModal)
+            setSelectedId(item.appointId)
+          }
+          }
           className="bg-green-500 hover:bg-green-700"
         >
           <i className="fa-solid fa-pen-to-square"></i>
@@ -95,7 +101,7 @@ export const DetailCard = ({
           handleUpdateAppointment={handleUpdateAppointment}
           toggleModal={toggleModal}
           setToggleModal={setToggleModal}
-          itemId={item.appointId}
+          itemId={selectedId}
         />
       )}
     </div>

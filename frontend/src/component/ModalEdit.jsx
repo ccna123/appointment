@@ -38,9 +38,9 @@ export const ModalEdit = ({
   }, [itemId]);
 
   return (
-    <div className="w-full min-h-screen overflow-hidden absolute top-0 left-0 bg-gray-600/50">
+    <div className="w-full h-full overflow-hidden absolute top-0 left-0 bg-gray-600/50">
       <ToastContainer />
-      <section className="bg-white rounded-md lg:w-[50%] mx-auto mt-20 p-5">
+      <section className="bg-white rounded-md lg:w-[50%] mx-auto mt-12 p-5">
         <div className="flex items-center justify-between">
           <Title>Edit</Title>
           <i
