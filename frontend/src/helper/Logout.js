@@ -1,5 +1,5 @@
 const handleLogout = async (navigate) => {
-    localStorage.removeItem("user");
+    localStorage.clear();
     navigate("/");
 };
 

@@ -52,6 +52,7 @@ const Login = () => {
         }
 
         localStorage.setItem("user", JSON.stringify(user))
+        localStorage.setItem("token", idToken)
         setResMess("Login successfull!")
         setStatus(200)
         if (user.userRole === 'admin') {
@@ -74,55 +75,6 @@ const Login = () => {
     }
     )
   }
-
-
-  const handleSignin = async () => {
-    try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}user/signin`,
-        {
-          email: formData.email,
-          password: formData.password,
-        }
-      );
-      if (res.data.status === 200) {
-        setResMess(res.data.mess);
-        setStatus(200);
-        localStorage.setItem("user", JSON.stringify(res.data));
-
-        if (res.data.user.role === "admin") {
-          setTimeout(() => {
-            navigate("/admin");
-          }, 1000);
-        } else {
-          setTimeout(() => {
-            navigate("/main");
-          }, 1000);
-        }
-      } else {
-        setResMess(res.data.mess);
-        setStatus(401);
-        setFormData("");
-      }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleTest = async () => {
-    try {
-      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}`);
-      if (res.data.status === 200) {
-        setResMess(res.data.mess);
-        setStatus(200);
-        console.log(res);
-      }
-    } catch (error) {
-      console.log(error);
-
-    }
-  };
-
   return (
     <div className="bg-white rounded-md h-fit md:w-[50%] p-4 mt-20 mx-4">
       <h1 className="text-4xl font-bold">Login</h1>

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { DetailCard } from "../component/DetailCard";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import axios from "axios";
+import axios from "../ultil/axiosConfig";
 import useDetail from "../hooks/useDetails";
 import notify from "../ultil/notify";
 import Title from "../component/TItle/Title";
@@ -18,7 +18,7 @@ export const Detail = () => {
   const handleDeleteAppointment = async (appointId) => {
     try {
       await axios.delete(
-        `${process.env.REACT_APP_APPOINT_GATEWAY_URL}?appointId=${appointId}&userId=${userId}`
+        `/?appointId=${appointId}&userId=${userId}`
       );
       notify("Delete successfully", "error");
       setRefresh((prev) => !prev);
@@ -30,7 +30,7 @@ export const Detail = () => {
   const handleUpdateAppointment = async (itemId, userId, singleAppoint) => {
     try {
       await axios.put(
-        `${process.env.REACT_APP_APPOINT_GATEWAY_URL}`,
+        '/',
         singleAppoint
       );
       setRefresh((prev) => !prev);

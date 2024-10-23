@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from 'axios'
+import axios from '../ultil/axiosConfig'
 
 export default function useDetail(refesh) {
   const userId = JSON.parse(localStorage.getItem("user"))
@@ -9,7 +9,7 @@ export default function useDetail(refesh) {
   useEffect(() => {
     const get_appointment = async () => {
       const res = await axios.get(
-        `${process.env.REACT_APP_APPOINT_GATEWAY_URL}?userId=${userId}`,
+        `/?userId=${userId}`,
       )
 
       setDetails(res.data);

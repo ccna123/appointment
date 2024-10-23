@@ -9,7 +9,7 @@ import Select from "../component/Select/Select";
 import notify from "../ultil/notify";
 import Title from "../component/TItle/Title";
 import TextArea from "../component/TextArea/TextArea";
-import axios from "axios";
+import axios from "../ultil/axiosConfig";
 import handleLogout from "../helper/Logout";
 import { v4 as uuidv4 } from 'uuid'
 
@@ -44,7 +44,7 @@ export const Main = () => {
     }
 
     try {
-      await axios.post(`${process.env.REACT_APP_APPOINT_GATEWAY_URL}`, {
+      await axios.post('/', {
         userId: userId,
         appointId: uuidv4(),
         date: date,

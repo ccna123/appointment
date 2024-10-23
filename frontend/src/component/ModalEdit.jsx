@@ -8,7 +8,7 @@ import Select from "./Select/Select";
 import Input from "./Input/Input";
 import Title from "./TItle/Title";
 import TextArea from "./TextArea/TextArea";
-import axios from "axios";
+import axios from "../ultil/axiosConfig";
 
 export const ModalEdit = ({
   setToggleModal,
@@ -27,7 +27,7 @@ export const ModalEdit = ({
     const fetchSingleAppoint = async () => {
       try {
         const res = await axios.get(
-          `${process.env.REACT_APP_APPOINT_GATEWAY_URL}?appointId=${itemId}&userId=${userId}`
+          `/?appointId=${itemId}&userId=${userId}`
         );
         setSingleAppoint(res.data);
       } catch (error) {

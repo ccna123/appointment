@@ -6,7 +6,7 @@ import notify from "../ultil/notify";
 import Title from "../component/TItle/Title";
 import AppointmentItem from "../component/Appointment/AppointmentItem";
 import AppontmentDetailContainer from "../component/Appointment/AppontmentDetailContainer";
-import axios from "axios";
+import axios from "../ultil/axiosConfig";
 import Button from "../component/Button/Button";
 import handleLogout from "../helper/Logout";
 import AppointmentContainer from "../component/Appointment/AppointmentContainer";
