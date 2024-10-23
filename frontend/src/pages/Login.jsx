@@ -51,6 +51,9 @@ const Login = () => {
           userName: payload["name"]
         }
 
+        console.log(idToken);
+
+
         localStorage.setItem("user", JSON.stringify(user))
         localStorage.setItem("token", idToken)
         setResMess("Login successfull!")
