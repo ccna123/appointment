@@ -53,6 +53,7 @@ export const Main = () => {
         location: location,
         note: note,
         coach: coaches[Math.floor(Math.random() * coaches.length)],
+        userName
       });
       notify("Make appointment successfully", "success");
       setformData({

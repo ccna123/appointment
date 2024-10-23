@@ -20,7 +20,7 @@ const AppointmentItem = ({ appoint, index, handleConfirm, keyItem }) => {
         <div className="col-span-12 my-4 md:my-0 md:col-span-2">
           <Button
             disabled={appoint.status === "confirmed"}
-            onClick={() => handleConfirm(appoint.id, appoint.userId)}
+            onClick={() => handleConfirm(appoint.appointId, appoint.userId)}
             className={`${appoint.status === "confirmed"
               ? "bg-slate-400 cursor-not-allowed "
               : "bg-green-400 text-white hover:bg-green-700"

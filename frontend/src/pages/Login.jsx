@@ -54,9 +54,16 @@ const Login = () => {
         localStorage.setItem("user", JSON.stringify(user))
         setResMess("Login successfull!")
         setStatus(200)
-        setTimeout(() => {
-          navigate("/main")
-        }, 2000);
+        if (user.userRole === 'admin') {
+          setTimeout(() => {
+            navigate("/admin")
+          }, 2000);
+        } else {
+          setTimeout(() => {
+            navigate("/main")
+          }, 2000);
+
+        }
       },
       onFailure: (err) => {
         console.log(err);

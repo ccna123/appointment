@@ -71,7 +71,7 @@ export const DetailCard = ({
         View Note
       </p>
       <p
-        className={`${showNote ? "block overflow-y-scroll break-words h-[128px]" : "hidden"
+        className={`${showNote ? "shadow-[rgba(0,_0,_0,_0.24)_0px_3px_8px] block overflow-y-scroll break-words h-[128px] mx-2 mb-2 rounded-lg" : "hidden"
           } p-3`}
       >
         {item.note}
