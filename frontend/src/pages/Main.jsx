@@ -43,7 +43,7 @@ export const Main = () => {
     }
 
     try {
-      await axios.post(`${process.env.REACT_APP_API_GATEWAY_URL}/create`, {
+      await axios.post(`${process.env.REACT_APP_BACKEND_URL}/create`, {
         userId: userId,
         date: date,
         selectedTime: selectedTime,
@@ -107,8 +107,9 @@ export const Main = () => {
             onClick={(e) =>
               handleInputChange("selectedTime", e.target.textContent)
             }
-            className={`${time === selectedTime ? "bg-black text-white" : "text-black"
-              } border-2 py-2 rounded-md hover:bg-black hover:text-white`}
+            className={`${
+              time === selectedTime ? "bg-black text-white" : "text-black"
+            } border-2 py-2 rounded-md hover:bg-black hover:text-white`}
           >
             {time}
           </p>

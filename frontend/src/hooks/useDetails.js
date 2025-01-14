@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import axios from 'axios'
+import axios from "axios";
 
 export default function useDetail(refesh) {
   const userId = JSON.parse(localStorage.getItem("user"))
@@ -9,8 +9,8 @@ export default function useDetail(refesh) {
   useEffect(() => {
     const get_appointment = async () => {
       const res = await axios.get(
-        `${process.env.REACT_APP_API_GATEWAY_URL}?userId=${userId}`,
-      )
+        `${process.env.REACT_APP_BACKEND_URL}?userId=${userId}`
+      );
       setDetails(res.data);
     };
     get_appointment();
