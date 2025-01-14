@@ -10,12 +10,12 @@ const adminRoute = require("./routes/Admin.js");
 app.use(cors());
 app.use(express.json());
 
-app.get("/health", (req, res) => {
+app.get("/api/health", (req, res) => {
   return res.json({ mess: "Healthy", status: 200 });
 });
-app.use("/appoint", appointRoute);
-app.use("/user", userRoute);
-app.use("/admin", adminRoute);
+app.use("/api/appoint", appointRoute);
+app.use("/api/user", userRoute);
+app.use("/api/admin", adminRoute);
 
 const prisma = new PrismaClient();
 
