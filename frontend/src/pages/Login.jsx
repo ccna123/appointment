@@ -6,7 +6,6 @@ import Input from "../component/Input/Input";
 import ResMess from "../component/ResponseMessage/ResMess";
 
 const Login = () => {
-
   const [status, setStatus] = useState(null);
   const [resMess, setResMess] = useState("");
   const navigate = useNavigate();
@@ -23,6 +22,7 @@ const Login = () => {
     });
   };
   const handleLogin = async () => {
+    console.log(process.env.REACT_APP_BACKEND_URL);
 
     try {
       const res = await axios.post(
@@ -99,7 +99,6 @@ const Login = () => {
       }
     } catch (error) {
       console.log(error);
-
     }
   };
 
