@@ -16,7 +16,7 @@ export const Detail = () => {
   const handleDeleteAppointment = async (id) => {
     try {
       await axios.delete(
-        `${process.env.REACT_APP_BACKEND_URL}delete?id=${id}&userId=${userId}`
+        `${process.env.REACT_APP_BACKEND_URL}appoint/delete?id=${id}&userId=${userId}`
       );
       notify("Delete successfully", "error");
       setRefresh((prev) => !prev);
@@ -28,7 +28,7 @@ export const Detail = () => {
   const handleUpdateAppointment = async (itemId, userId, singleAppoint) => {
     try {
       await axios.put(
-        `${process.env.REACT_APP_BACKEND_URL}update?id=${itemId}&userId=${userId}`,
+        `${process.env.REACT_APP_BACKEND_URL}appoint/update?id=${itemId}&userId=${userId}`,
         singleAppoint
       );
       setRefresh((prev) => !prev);
