@@ -104,7 +104,7 @@ const Login = () => {
 
   return (
     <div className="bg-white rounded-md h-fit md:w-[50%] p-4 mt-20 mx-4">
-      <h1 className="text-4xl font-bold">Login</h1>
+      <h1 className="text-4xl font-bold">Login: v3</h1>
       <Input
         onChange={(e) => handleInputChange(e.target.name, e.target.value)}
         value={formData.email}
