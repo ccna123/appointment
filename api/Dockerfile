@@ -1,21 +1,17 @@
 # Stage 1: Build the Node.js app (dependencies)
-FROM node:slim AS build
+FROM node:23-bookworm-slim AS build
 
 # Set working directory
-WORKDIR /app
+WORKDIR /express
 
-RUN apt-get update -y && apt-get install -y openssl
+# Install system dependencies (openssl is required for Prisma)
+RUN apt-get update -y && apt-get install -y openssl && \
+    rm -rf /var/lib/apt/lists/*
 
+# Update npm to the latest version
 RUN npm install -g npm@latest
 
-RUN npm cache clean --force && \
-    npm install --save-dev prisma@latest && \
-    npm install @prisma/client@latest
-
-RUN npm install --save-dev prisma@latest && npm install @prisma/client@latest
-
-
-# Copy package.json and package-lock.json (or yarn.lock) to install dependencies
+# Copy package.json and package-lock.json to install dependencies
 COPY package*.json ./
 
 # Install production dependencies only
@@ -25,25 +21,17 @@ RUN npm ci --only=production
 COPY . .
 
 # Stage 2: Create the production image with minimal footprint
-FROM node:slim
-
-RUN apt-get update -y && apt-get install -y openssl
+FROM node:23-bookworm-slim
 
 # Set working directory for the final image
-WORKDIR /app
+WORKDIR /express
 
-RUN apt-get update -y && apt-get install -y openssl
-
-RUN npm install -g npm@latest
-
-RUN npm cache clean --force && \
-    npm install --save-dev prisma@latest && \
-    npm install @prisma/client@latest
-
-RUN npm install --save-dev prisma@latest && npm install @prisma/client@latest
+# Install system dependencies (openssl is required for Prisma)
+RUN apt-get update -y && apt-get install -y openssl && \
+    rm -rf /var/lib/apt/lists/*
 
 # Copy only the necessary files from the build stage (dependencies and built app)
-COPY --from=build /app /app
+COPY --from=build /express /express
 
 # Expose the port your application listens on
 EXPOSE 4000
