@@ -74,7 +74,7 @@ const Home = () => {
         </div>
         {footer.map((item, index) => (
           <CardContainer className={"w-fit"}>
-            <i className={item.icon}></i>
+            <i className={`${item.icon} text-2xl`}></i>
             <div>{item.title}</div>
             <div>{item.description}</div>
           </CardContainer>
