@@ -5,6 +5,7 @@ import Button from "../component/Button/Button";
 import Input from "../component/Input/Input";
 import ResMess from "../component/ResponseMessage/ResMess";
 import { useForm } from "react-hook-form";
+import Spinner from "../component/Spinner";
 
 const Login = () => {
   const [response, setResponse] = useState({
@@ -16,7 +17,7 @@ const Login = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
 
   const onSubmit = async (data) => {
@@ -78,8 +79,14 @@ const Login = () => {
           autoComplete={"current-password"}
         />
 
-        <Button type="submit" className={"bg-blue-500 mt-4 hover:bg-blue-700"}>
+        <Button
+          type="submit"
+          className={
+            "bg-blue-500 mt-4 hover:bg-blue-700 flex items-center justify-center gap-4"
+          }
+        >
           Login
+          {isSubmitting && <Spinner />}
         </Button>
       </form>
       <Button

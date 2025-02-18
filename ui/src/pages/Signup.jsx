@@ -5,6 +5,7 @@ import Button from "../component/Button/Button";
 import Input from "../component/Input/Input";
 import ResMess from "../component/ResponseMessage/ResMess";
 import { useForm } from "react-hook-form";
+import Spinner from "../component/Spinner";
 
 const Signup = () => {
   const [response, setResponse] = useState({
@@ -15,7 +16,7 @@ const Signup = () => {
   const {
     register,
     handleSubmit,
-    formState: { errors },
+    formState: { errors, isSubmitting },
   } = useForm();
 
   const onSubmit = async (data) => {
@@ -71,9 +72,12 @@ const Signup = () => {
         />
         <Button
           type="submit"
-          className={"bg-green-500 mt-4 hover:bg-green-700"}
+          className={
+            "bg-green-500 mt-4 hover:bg-green-700 flex items-center justify-center gap-4"
+          }
         >
           Confirm
+          {isSubmitting && <Spinner />}
         </Button>
       </form>
       <Button
