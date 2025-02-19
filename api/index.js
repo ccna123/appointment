@@ -2,12 +2,13 @@ const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const { PrismaClient } = require("@prisma/client");
-const verifyToken = require("./middleware/verifyToken.js");
+// const verifyToken = require("./middleware/verifyToken.js");
 const cookieParser = require("cookie-parser");
 
 const app = express();
-const appointRoute = require("./routes/Appoint.js");
-const adminRoute = require("./routes/Admin.js");
+// const appointRoute = require("./routes/Appoint.js");
+// const adminRoute = require("./routes/Admin.js");
+const enrollRoute = require("./routes/Enroll.js");
 
 const corsOption = {
   origin: "http://localhost:3000",
@@ -22,8 +23,9 @@ app.use(cookieParser());
 app.get("/api/health", (req, res) => {
   return res.json({ mess: "Healthy", status: 200 });
 });
-app.use("/api/appoint", verifyToken, appointRoute);
-app.use("/api/admin", verifyToken, adminRoute);
+// app.use("/api/appoint", verifyToken, appointRoute);
+// app.use("/api/admin", verifyToken, adminRoute);
+app.use("/api/course", enrollRoute);
 
 const prisma = new PrismaClient();
 

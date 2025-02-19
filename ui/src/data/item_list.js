@@ -1,4 +1,4 @@
-export const items = [
+export const nav_items = [
   {
     id: 1,
     title: "Home",
@@ -11,13 +11,18 @@ export const items = [
   },
   {
     id: 3,
-    title: "Course",
+    title: "My Course",
     icon: "fa-solid fa-book-open",
   },
   {
     id: 4,
     title: "Contact",
     icon: "fa-solid fa-phone",
+  },
+  {
+    id: 5,
+    title: "Login",
+    icon: "fa-solid fa-right-to-bracket",
   },
 ];
 
@@ -45,36 +50,48 @@ export const courses = [
     title: "Cyber Security",
     image: "cyber.jpg",
     price: 123,
+    enrolled: 663452,
+    length: 17,
   },
   {
     id: 2,
-    title: "Digital Marketing",
-    image: "digital-marketing.png",
+    title: "Kubernetes",
+    image: "k8s.jpg",
     price: 412,
+    enrolled: 567564,
+    length: 50,
   },
   {
     id: 3,
-    title: "English",
-    image: "english.jpg",
+    title: "Docker",
+    image: "docker.jpg",
     price: 612,
+    enrolled: 941065,
+    length: 10,
   },
   {
     id: 4,
-    title: "AI",
-    image: "ai.jpg",
+    title: "Dev Ops",
+    image: "devops.jpg",
     price: 1250,
+    enrolled: 7920123,
+    length: 45,
   },
   {
     id: 5,
-    title: "Mobile Development",
-    image: "mobile-develop.jpg",
+    title: "Cloud Computing",
+    image: "cloud.jpg",
     price: 2221,
+    enrolled: 9202141,
+    length: 30,
   },
   {
     id: 6,
     title: "Web Development",
     image: "web-develop.jpg",
     price: 5512,
+    enrolled: 9012913,
+    length: 36,
   },
 ];
 
@@ -82,13 +99,13 @@ export const footer = [
   {
     id: 1,
     title: "About us",
-    icon: "fa-solid fa-exclamation",
+    icon: "fa-solid fa-circle-info",
     description:
       "since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
   },
   {
     id: 2,
-    title: "Certificattion",
+    title: "Certification",
     icon: "fa-solid fa-medal",
     description:
       "since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",

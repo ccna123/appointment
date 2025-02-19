@@ -7,16 +7,25 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model Appointment {
-  id       Int    @id@default(autoincrement())
-  userId   String
-  course   String
-  location String
-  coach    String
-  notes    String
-  date     String
-  time     String
-  status   String
+// model Appointment {
+//   id       Int    @id@default(autoincrement())
+//   userId   String
+//   course   String
+//   location String
+//   coach    String
+//   notes    String
+//   date     String
+//   time     String
+//   status   String
 
-  @@map("appointment")
+//   @@map("appointment")
+// }
+
+model Enroll {
+  id Int @id @default(autoincrement())
+  userId   String
+  courseId String
+  paymentStatus Boolean
+
+  @@map("enroll")
 }

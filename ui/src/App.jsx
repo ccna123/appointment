@@ -1,13 +1,12 @@
 import "./App.css";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
 import Login from "./pages/Login";
-import { Main } from "./pages/Main";
-import { Detail } from "./pages/Detail";
-import { Admin } from "./pages/Admin";
 import React from "react";
 import Signup from "./pages/Signup";
 import axios from "axios";
 import Home from "./pages/Home";
+import MyCourse from "./pages/MyCourse";
+import Layout from "./component/Layout/Layout";
 
 function App() {
   axios.defaults.withCredentials = true;
@@ -15,11 +14,12 @@ function App() {
     <div className="App bg-gray-200 flex justify-center w-full min-h-screen">
       <BrowserRouter router>
         <Routes>
-          <Route path="/" element={<Home />} />
+          <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
-          <Route path="/main" element={<Main />} />
-          <Route path="/detail/:userId" element={<Detail />} />
-          <Route path="/admin" element={<Admin />} />
+          <Route element={<Layout />}>
+            <Route path="/" element={<Home />} />
+            <Route path="/mycourse/:userId" element={<MyCourse />} />
+          </Route>
         </Routes>
       </BrowserRouter>
     </div>
