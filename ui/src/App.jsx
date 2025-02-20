@@ -7,6 +7,9 @@ import axios from "axios";
 import Home from "./pages/Home";
 import MyCourse from "./pages/MyCourse";
 import Layout from "./component/Layout/Layout";
+import Payment from "./pages/Payment";
+import PaymentSuccess from "./pages/PaymentSuccess";
+import PaymentCancel from "./pages/PaymentCancel";
 
 function App() {
   axios.defaults.withCredentials = true;
@@ -18,6 +21,9 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
+            <Route path="/payment/success" element={<PaymentSuccess />} />
+            <Route path="/payment/cancel" element={<PaymentCancel />} />
+            <Route path="/payment/:userId" element={<Payment />} />
             <Route path="/mycourse/:userId" element={<MyCourse />} />
           </Route>
         </Routes>

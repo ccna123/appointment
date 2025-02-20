@@ -5,7 +5,7 @@ const Input = React.forwardRef(
   ({ type, placeholder, className, ...props }, ref) => {
     return (
       <input
-        ref={ref} // ✅ Forward the ref
+        ref={ref}
         type={type}
         placeholder={placeholder}
         className={twMerge(

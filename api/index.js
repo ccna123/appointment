@@ -4,6 +4,7 @@ require("dotenv").config();
 const { PrismaClient } = require("@prisma/client");
 // const verifyToken = require("./middleware/verifyToken.js");
 const cookieParser = require("cookie-parser");
+const mongoose = require("mongoose");
 
 const app = express();
 // const appointRoute = require("./routes/Appoint.js");
@@ -20,6 +21,14 @@ app.use(cors(corsOption));
 app.use(express.json());
 app.use(cookieParser());
 
+mongoose
+  .connect(process.env.DATABASE_URL)
+  .then(() => console.log("MongoDB connected successfully 🚀"))
+  .catch((err) => console.error("MongoDB connection error:", err));
+mongoose.connection.on("connected", () => {
+  console.log("Mongoose connection established");
+});
+
 app.get("/api/health", (req, res) => {
   return res.json({ mess: "Healthy", status: 200 });
 });
@@ -31,7 +40,7 @@ const prisma = new PrismaClient();
 
 // Start server and create default user
 const startServer = async () => {
-  await prisma.$connect();
+  // await prisma.$connect();
 
   const PORT = process.env.PORT || 4000;
   app.listen(PORT, () => {

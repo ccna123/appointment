@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  mongodb:
+    image: public.ecr.aws/docker/library/mongo:8.0.5-rc2-noble
+    restart: always
+    ports:
+      - "27017:27017"
+    environment:
+      MONGODB_INITDB_ROOT_USERNAME: root
+      MONGODB_INITDB_ROOT_PASSWORD: root
+    volumes:
+      - mongo_data:/data/db
+    command: "mongod --bind_ip_all"
+volumes:
+  mongo_data:

@@ -1,11 +1,11 @@
-generator client {
-  provider = "prisma-client-js"
-}
+// generator client {
+//   provider = "prisma-client-js"
+// }
 
-datasource db {
-  provider = "mysql"
-  url      = env("DATABASE_URL")
-}
+// datasource db {
+//   provider = "mongodb"
+//   url      = env("DATABASE_URL")
+// }
 
 // model Appointment {
 //   id       Int    @id@default(autoincrement())
@@ -21,11 +21,11 @@ datasource db {
 //   @@map("appointment")
 // }
 
-model Enroll {
-  id Int @id @default(autoincrement())
-  userId   String
-  courseId String
-  paymentStatus Boolean
+// model Enroll {
+//   id Int @id @default(autoincrement())
+//   userId   String
+//   courseId String
+//   paymentStatus Boolean
 
-  @@map("enroll")
-}
+//   @@map("enroll")
+// }

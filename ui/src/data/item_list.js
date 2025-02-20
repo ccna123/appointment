@@ -6,8 +6,8 @@ export const nav_items = [
   },
   {
     id: 2,
-    title: "Profile",
-    icon: "fa-solid fa-id-card",
+    title: "Payment",
+    icon: "fa-solid fa-money-check-dollar",
   },
   {
     id: 3,
@@ -116,5 +116,28 @@ export const footer = [
     icon: "fa-solid fa-user-group",
     description:
       "since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book.",
+  },
+];
+
+export const paymentMethod = [
+  {
+    id: 1,
+    title: "Visa",
+    image: "visa.png",
+  },
+  {
+    id: 2,
+    title: "Master card",
+    image: "master-card.png",
+  },
+  {
+    id: 3,
+    title: "PayPal",
+    image: "paypal.png",
+  },
+  {
+    id: 4,
+    title: "Google Pay",
+    image: "google-pay.png",
   },
 ];

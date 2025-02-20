@@ -8,7 +8,7 @@ const MyCourse = () => {
   const fetchEnrolledCourses = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}course/get/enrolled/${userId}`
+        `${process.env.REACT_APP_BACKEND_URL}course/get/enrolled?userId=${userId}`
       );
       setMyCourses(res.data);
     } catch (error) {

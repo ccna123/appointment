@@ -24,10 +24,10 @@ const Home = () => {
       navigate("/login");
       return;
     }
+    course.paymentStatus = "Unpaid";
     const enroll = {
-      courseId: course.courseId,
       userId: userId,
-      paymentStatus: false,
+      course,
     };
     try {
       const res = await axios.post(
