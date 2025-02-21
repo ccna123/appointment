@@ -10,7 +10,6 @@ const enrollSchema = mongoose.Schema({
     length: { type: Number, required: true },
     price: { type: Number, required: true },
     title: { type: String, required: true },
-    paymentStatus: { type: String, required: true, default: "Unpaid" },
   },
 });
 module.exports = mongoose.model("Enroll", enrollSchema);

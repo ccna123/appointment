@@ -9,6 +9,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import notify from "../ultil/notify";
+import { loadStripe } from "@stripe/stripe-js";
 const Home = () => {
   const [selectedFooterItem, setSelectedFooterItem] = useState(0);
   const [courses, setCourses] = useState([]);
@@ -17,34 +18,38 @@ const Home = () => {
   const userData = JSON.parse(localStorage.getItem("user")) || {};
   const { user = {} } = userData;
 
-  const { userId = "", role: userRole = "", name = "" } = user;
+  const { userId, email, name } = user;
 
-  const handleEnroll = async (course) => {
-    if (!userId) {
-      navigate("/login");
-      return;
-    }
-    course.paymentStatus = "Unpaid";
-    const enroll = {
-      userId: userId,
-      course,
-    };
+  const handleCheckOut = async (course) => {
     try {
-      const res = await axios.post(
-        `${process.env.REACT_APP_BACKEND_URL}course/enroll`,
-        {
-          enroll,
-        },
-        { withCredentials: true }
-      );
-      res.status === 201 && notify("Enroll successfully", "success");
-    } catch (error) {
-      if (error.response.status === 409) {
-        notify("You already enrolled this course", "error");
-        return;
+      if (!userId) {
+        navigate("/login");
       }
-      notify("Failed to enroll", "error");
-      return;
+
+      const stripePromise = await loadStripe(process.env.REACT_APP_STRIPE_PK);
+      const headers = { "Content-Type": "application/json" };
+
+      const res = await axios.post(
+        `${process.env.REACT_APP_PAYMENT_SERVICE_URL}/checkout`,
+        {
+          products: Array.isArray(course) ? course : [course],
+          name,
+          email,
+          userId,
+        },
+        { headers }
+      );
+
+      const session = await res.data;
+      const result = stripePromise.redirectToCheckout({
+        sessionId: session.id,
+      });
+
+      if (result.error) {
+        console.error(result.error);
+      }
+    } catch (error) {
+      notify(`${error.response.data.mess}`, "error");
     }
   };
 
@@ -117,7 +122,7 @@ const Home = () => {
             <CourseItem
               key={index}
               course={item}
-              onClick={() => handleEnroll(item)}
+              onClick={() => handleCheckOut(item)}
             />
           ))
         ) : (

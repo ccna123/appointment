@@ -29,25 +29,53 @@ router.get("/get", async (req, res) => {
   }
 });
 
-router.post("/enroll", async (req, res) => {
-  try {
-    const { userId, course } = req.body.enroll;
-    const existingRecord = await enrollSchema.findOne({
-      userId: userId,
-      "course.courseId": course.courseId,
-    });
+router.get("/get/:courseId", async (req, res) => {
+  const { courseId } = req.params; // Extract courseId from the URL
 
-    if (existingRecord) {
-      return res.status(409).send();
+  const params = {
+    TableName: process.env.DYNAMODB_TABLE,
+    Key: {
+      courseId: courseId, // Assuming courseId is the primary key
+    },
+  };
+
+  try {
+    const data = await dynamodb.get(params).promise();
+
+    if (!data.Item) {
+      // If no course is found with the given courseId
+      return res.status(404).json({ error: "Course not found" });
     }
-    const newRecord = await enrollSchema.create(req.body.enroll);
-    return res.status(201).json(newRecord);
+
+    // Add imageUrl to the course object
+    const course = data.Item;
+    const imageUrl = `https://${process.env.S3_BUCKET}.s3.${process.env.AWS_REGION}.amazonaws.com/${course.image}`;
+    course.imageUrl = imageUrl;
+
+    res.status(200).json(course);
   } catch (error) {
-    return res.status(500).json(error);
+    console.error("Error fetching course from DynamoDB:", error);
+    res.status(500).json({ error: "Failed to fetch course" });
   }
 });
 
-router.get("/get/enrolled", async (req, res) => {
+// router.post("/enroll", async (req, res) => {
+//   try {
+//     const { userId, course } = req.body.enroll;
+//     const existingRecord = await enrollSchema.findOne({
+//       userId: userId,
+//       "course.courseId": course.courseId,
+//     });
+
+//     const newRecord = await enrollSchema.create(req.body.enroll);
+//     return res.status(201).json({ mess: "Created success" });
+//   } catch (error) {
+//     console.log(error);
+//     return res.status(500).json({ mess: "Internal server error" });
+//   }
+// });
+
+router.get("/enrolled", async (req, res) => {
   try {
     const records = await enrollSchema.find({
       userId: req.query.userId,

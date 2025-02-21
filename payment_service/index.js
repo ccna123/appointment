@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const stripe = require("stripe")(process.env.STRIPE_SECRET);
 const orderSchema = require("./model/orderSchema");
 const enrollSchema = require("./model/enrollSchema");
-
+const axios = require("axios");
 const app = express();
 
 const corsOption = {
@@ -37,22 +37,22 @@ app.post("/payment/checkout", async (req, res) => {
   try {
     const { products, userId, name, email } = req.body;
 
-    const existingRecord = await orderSchema.findOne({
+    const existingRecord = await enrollSchema.findOne({
       userId: userId,
+      "course.courseId": products[0].courseId,
     });
 
     if (existingRecord) {
-      return res.status(409).send();
+      return res.status(409).json({ mess: "You already taken this course" });
     }
-
     const lineItems = products.map((product) => ({
       price_data: {
         currency: "usd",
         product_data: {
-          name: product.course.title,
-          images: [product.course.imageUrl],
+          name: product.title,
+          images: [product.imageUrl],
         },
-        unit_amount: product.course.price * 100,
+        unit_amount: product.price * 100,
       },
       quantity: 1,
     }));
@@ -67,21 +67,25 @@ app.post("/payment/checkout", async (req, res) => {
     await orderSchema.create({
       userId,
       sessionId: session.id,
+      courseId: products[0].courseId,
       name,
       email,
       paymentStatus: "Unpaid",
     });
+
     return res.status(200).send(session);
   } catch (error) {
-    console.log(error);
+    console.error(error);
+    return res.status(500).json(error);
   }
 });
 
-app.get("/payment/detail/", async (req, res) => {
+app.get("/payment/detail", async (req, res) => {
   try {
     const { userId } = req.query;
     const orderInfo = await orderSchema.findOne({
       userId,
+      paymentStatus: "Unpaid",
     });
 
     if (!orderInfo) {
@@ -95,12 +99,22 @@ app.get("/payment/detail/", async (req, res) => {
     if (sessionDetail.payment_status === "paid") {
       const order = await orderSchema.findOne({
         userId: orderInfo.userId,
+        paymentStatus: "Unpaid",
       });
 
       if (order) {
         order.paymentStatus = sessionDetail.payment_status;
         await order.save();
       }
+
+      const course = await axios.get(
+        `${process.env.COURSE_URL}/get/${orderInfo.courseId}`
+      );
+
+      const newRecord = await enrollSchema.create({
+        userId,
+        course: course.data,
+      });
 
       const paymentIntent = await stripe.paymentIntents.retrieve(
         sessionDetail.payment_intent
@@ -111,7 +125,52 @@ app.get("/payment/detail/", async (req, res) => {
     }
     return res.status(200).send();
   } catch (error) {
-    console.error("Error fetching payment intent:", error);
+    console.error("Error:", error);
+    return res.status(500).json(error);
+  }
+});
+
+app.get("/payment/receipt", async (req, res) => {
+  try {
+    const { userId } = req.query;
+
+    const records = await orderSchema.find({
+      userId,
+    });
+
+    if (records.length === 0) {
+      return res.status(404).send();
+    }
+
+    const sessionIds = records.map((record) => {
+      return record.sessionId;
+    });
+
+    const paymentIntents = await Promise.all(
+      sessionIds.map(async (sessionId) => {
+        const session = await stripe.checkout.sessions.retrieve(sessionId);
+        return session.payment_intent
+          ? await stripe.paymentIntents.retrieve(session.payment_intent)
+          : null;
+      })
+    );
+
+    const latestCharges = await Promise.all(
+      paymentIntents.map(async (paymentIntent) => {
+        if (!paymentIntent.latest_charge) return null;
+
+        return await stripe.charges.retrieve(paymentIntent.latest_charge);
+      })
+    );
+
+    const receipt_urls = latestCharges.map((latestCharge) => {
+      return latestCharge.receipt_url;
+    });
+
+    return res.status(200).json(receipt_urls);
+  } catch (error) {
+    return res.status(500).json(error);
+    console.error(error);
   }
 });
 
