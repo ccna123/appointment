@@ -59,22 +59,6 @@ router.get("/get/:courseId", async (req, res) => {
   }
 });
 
-// router.post("/enroll", async (req, res) => {
-//   try {
-//     const { userId, course } = req.body.enroll;
-//     const existingRecord = await enrollSchema.findOne({
-//       userId: userId,
-//       "course.courseId": course.courseId,
-//     });
-
-//     const newRecord = await enrollSchema.create(req.body.enroll);
-//     return res.status(201).json({ mess: "Created success" });
-//   } catch (error) {
-//     console.log(error);
-//     return res.status(500).json({ mess: "Internal server error" });
-//   }
-// });
-
 router.get("/enrolled", async (req, res) => {
   try {
     const records = await enrollSchema.find({
@@ -89,27 +73,6 @@ router.get("/enrolled", async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Failed to fetch data" });
-  }
-});
-
-router.delete("/delete", async (req, res) => {
-  try {
-    const { id, userId, courseId } = req.body;
-
-    const result = await enrollSchema.findOneAndDelete({
-      _id: id,
-      userId: userId,
-      "course.courseId": courseId,
-    });
-
-    if (!result) {
-      return res.status(404).json({ message: "Enrollment not found" });
-    }
-
-    return res.status(200).json({ message: "Enrollment deleted successfully" });
-  } catch (error) {
-    console.error(error);
-    return res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
