@@ -2,8 +2,8 @@ import React from "react";
 import Button from "../Button/Button";
 import CardContainer from "../Card/Container";
 import { formatEnrolled } from "../../ultil/numberFormat";
-
-const CourseItem = ({ course, onClick }) => {
+import Spinner from "../Spinner";
+const CourseItem = ({ course, onCheckOut, isLoading }) => {
   return (
     <CardContainer
       className={
@@ -33,12 +33,12 @@ const CourseItem = ({ course, onClick }) => {
             <p className="font-bold">Enrolled</p>
           </div>
           <Button
-            onClick={onClick}
+            onClick={onCheckOut}
             className={
-              "bg-blue-500 hover:bg-blue-700 hover:duration-100 cursor-pointer w-fit"
+              "bg-blue-500 hover:bg-blue-700 hover:duration-100 cursor-pointer w-full"
             }
           >
-            Enroll now
+            {isLoading ? <Spinner /> : "Enroll now"}
           </Button>
         </div>
       </div>

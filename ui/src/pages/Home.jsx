@@ -13,6 +13,8 @@ import { loadStripe } from "@stripe/stripe-js";
 const Home = () => {
   const [selectedFooterItem, setSelectedFooterItem] = useState(0);
   const [courses, setCourses] = useState([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [selectedCourseId, setSelectedCourseId] = useState(null);
   const navigate = useNavigate();
 
   const userData = JSON.parse(localStorage.getItem("user")) || {};
@@ -21,11 +23,12 @@ const Home = () => {
   const { userId, email, name } = user;
 
   const handleCheckOut = async (course) => {
+    setSelectedCourseId(course.courseId);
     try {
       if (!userId) {
         navigate("/login");
       }
-
+      setIsLoading(true);
       const stripePromise = await loadStripe(process.env.REACT_APP_STRIPE_PK);
       const headers = { "Content-Type": "application/json" };
 
@@ -49,7 +52,10 @@ const Home = () => {
         console.error(result.error);
       }
     } catch (error) {
+      setIsLoading(false);
       notify(`${error.response.data.mess}`, "error");
+    } finally {
+      setSelectedCourseId(null);
     }
   };
 
@@ -122,7 +128,8 @@ const Home = () => {
             <CourseItem
               key={index}
               course={item}
-              onClick={() => handleCheckOut(item)}
+              onCheckOut={() => handleCheckOut(item)}
+              isLoading={selectedCourseId === item.courseId}
             />
           ))
         ) : (

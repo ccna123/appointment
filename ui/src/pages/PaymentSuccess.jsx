@@ -5,16 +5,16 @@ import axios from "axios";
 const PaymentSuccess = () => {
   const { userId } = JSON.parse(localStorage.getItem("user")).user || "";
   useEffect(() => {
-    async function updatePaidStatus() {
+    async function handlePaySuccess() {
       try {
         await axios.get(
-          `${process.env.REACT_APP_PAYMENT_SERVICE_URL}/detail?userId=${userId}`
+          `${process.env.REACT_APP_PAYMENT_SERVICE_URL}/success?userId=${userId}`
         );
       } catch (error) {
         console.error(error);
       }
     }
-    updatePaidStatus();
+    handlePaySuccess();
   }, []);
 
   return (

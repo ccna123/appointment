@@ -80,7 +80,7 @@ app.post("/payment/checkout", async (req, res) => {
   }
 });
 
-app.get("/payment/detail", async (req, res) => {
+app.get("/payment/success", async (req, res) => {
   try {
     const { userId } = req.query;
     const orderInfo = await orderSchema.findOne({
@@ -127,6 +127,34 @@ app.get("/payment/detail", async (req, res) => {
   } catch (error) {
     console.error("Error:", error);
     return res.status(500).json(error);
+  }
+});
+
+app.delete("/payment/cancel", async (req, res) => {
+  try {
+    const { userId } = req.query;
+    const orders = await orderSchema.find({
+      userId,
+      paymentStatus: "Unpaid",
+    });
+
+    if (!orders || orders.length === 0) {
+      return res.status(404).json({ message: "No unpaid orders found" });
+    }
+
+    // Delete all unpaid orders
+    const result = await orderSchema.deleteMany({
+      userId,
+      paymentStatus: "Unpaid",
+    });
+
+    if (result.deletedCount === 0) {
+      return res.status(500).json({ message: "Failed to delete orders" });
+    }
+
+    return res.status(200).json({ message: "Order successfully canceled" });
+  } catch (error) {
+    console.log(error);
   }
 });
 
