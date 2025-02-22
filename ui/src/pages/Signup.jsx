@@ -30,7 +30,7 @@ const Signup = () => {
         }
       );
       setResponse({
-        status: res.data.status,
+        status: res.status,
         mess: res.data.mess,
       });
 
@@ -40,7 +40,7 @@ const Signup = () => {
     } catch (error) {
       setResponse({
         status: error.response.status,
-        mess: error.response.statusText,
+        mess: error.response.data.error,
       });
     }
   };
