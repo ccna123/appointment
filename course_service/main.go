@@ -135,10 +135,7 @@ func getCourseById(c *gin.Context) {
 
 // Fetch enrolled courses for a user
 func getEnrolled(c *gin.Context) {
-	if mongoClient == nil {
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "MongoDB client not initialized"})
-		return
-	}
+
 	userId := c.Param("userId")
 
 	// Find the database and collection
