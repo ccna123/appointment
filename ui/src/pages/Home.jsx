@@ -52,6 +52,7 @@ const Home = () => {
         console.error(result.error);
       }
     } catch (error) {
+      console.log(error);
       setIsLoading(false);
       notify(`${error.response.data.mess}`, "error");
     } finally {
@@ -61,9 +62,7 @@ const Home = () => {
 
   const fetchCourses = async () => {
     try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_BACKEND_URL}course/get`
-      );
+      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/get`);
       setCourses(res.data);
     } catch (error) {
       console.error(error);

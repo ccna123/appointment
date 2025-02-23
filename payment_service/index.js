@@ -89,7 +89,7 @@ app.get("/payment/success", async (req, res) => {
     });
 
     if (!orderInfo) {
-      return res.status(404).json({ mess: "Not found order" });
+      return res.status(404).json({ mess: "Not found unpaid order" });
     }
 
     const sessionDetail = await stripe.checkout.sessions.retrieve(
@@ -108,8 +108,9 @@ app.get("/payment/success", async (req, res) => {
       }
 
       const course = await axios.get(
-        `${process.env.COURSE_URL}/get/${orderInfo.courseId}`
+        `${process.env.COURSE_SERVICE_URL}/get/${orderInfo.courseId}`
       );
+      console.log(course);
 
       const newRecord = await enrollSchema.create({
         userId,

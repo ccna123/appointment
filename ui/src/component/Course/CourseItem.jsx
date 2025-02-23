@@ -7,7 +7,7 @@ const CourseItem = ({ course, onCheckOut, isLoading }) => {
   return (
     <CardContainer
       className={
-        "w-full flex items-center gap-4 cursor-pointer hover:shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+        "w-full h-full flex items-center gap-4 cursor-pointer hover:shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
       }
     >
       <div className="w-1/3 rounded-lg">
@@ -35,7 +35,7 @@ const CourseItem = ({ course, onCheckOut, isLoading }) => {
           <Button
             onClick={onCheckOut}
             className={
-              "bg-blue-500 hover:bg-blue-700 hover:duration-100 cursor-pointer w-full"
+              "bg-blue-500 hover:bg-blue-700 hover:duration-100 cursor-pointer"
             }
           >
             {isLoading ? <Spinner /> : "Enroll now"}

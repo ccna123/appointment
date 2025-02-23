@@ -168,10 +168,10 @@ func decodeToken(tokenStr string) (map[string]any, error) {
 
 	// Return decoded claims
 	return gin.H{
-		"userId":   claims["sub"],
-		"email":    claims["email"],
-		"role":     claims["custom:role"],
-		"username": claims["name"],
+		"userId": claims["sub"],
+		"email":  claims["email"],
+		"role":   claims["custom:role"],
+		"name":   claims["name"],
 	}, nil
 }
 
