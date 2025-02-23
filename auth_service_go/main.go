@@ -4,7 +4,6 @@ import (
 	"fmt"
 	"net/http"
 	"os"
-	"strings"
 
 	"log"
 
@@ -176,14 +175,17 @@ func decodeToken(tokenStr string) (map[string]any, error) {
 }
 
 func validateToken(c *gin.Context) {
-	authHeader := c.GetHeader("Authorization")
-	if authHeader == "" || !strings.HasPrefix(authHeader, "Bearer ") {
-		log.Println("Missing or invalid token")
-		c.JSON(http.StatusUnauthorized, gin.H{"mess": "Invalid or missing token"})
+	var requestBody struct {
+		Token string `json:"token"`
+	}
+
+	// Parse JSON body
+	if err := c.ShouldBindJSON(&requestBody); err != nil {
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid request body"})
 		return
 	}
 
-	tokenStr := strings.TrimPrefix(authHeader, "Bearer ")
+	tokenStr := requestBody.Token
 
 	jwks, err := keyfunc.Get(jwksURL, keyfunc.Options{})
 	if err != nil {
@@ -213,7 +215,7 @@ func main() {
 	}))
 	r.POST("/auth/login", login)
 	r.POST("/auth/signup", signup)
-	r.GET("/auth/validate", validateToken)
+	r.POST("/auth/validate", validateToken)
 	r.Run(":8080")
 
 }

@@ -1,12 +1,14 @@
 package main
 
 import (
+	"bytes"
 	"context"
 	"fmt"
 	"log"
 	"net/http"
 	"os"
 	"strconv"
+	"time"
 
 	"github.com/aws/aws-sdk-go-v2/aws"
 	"github.com/aws/aws-sdk-go-v2/config"
@@ -52,15 +54,19 @@ func init() {
 
 // MongoDB connection function
 func connectToMongo() (*mongo.Client, error) {
+
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
 	clientOptions := options.Client().ApplyURI(os.Getenv("DATABASE_URL"))
-	client, err := mongo.Connect(context.Background(), clientOptions)
+	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		log.Fatalf("Failed to connect to MongoDB: %v", err)
 		return nil, err
 	}
 
 	// Check if the connection is successful
-	err = client.Ping(context.Background(), nil)
+	err = client.Ping(ctx, nil)
 	if err != nil {
 		log.Fatalf("Failed to ping MongoDB: %v", err)
 		return nil, err
@@ -139,7 +145,7 @@ func getEnrolled(c *gin.Context) {
 	userId := c.Param("userId")
 
 	// Find the database and collection
-	collection := mongoClient.Database("course").Collection("enrolls")
+	collection := mongoClient.Database(os.Getenv("DATABASE_NAME")).Collection("enrolls")
 
 	var results []Enrollment
 	filter := bson.D{{Key: "userId", Value: userId}}
@@ -170,6 +176,50 @@ func getEnrolled(c *gin.Context) {
 
 	// Send the response with status 200 and the results
 	c.JSON(http.StatusOK, results)
+}
+
+func validateTokenMiddleware(c *gin.Context) {
+	// Get token from HTTP-only cookies
+	tokenCookie, err := c.Cookie("access_token")
+	if err != nil || tokenCookie == "" {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing or invalid token"})
+		c.Abort()
+		return
+	}
+
+	// Send token to Auth Service for validation
+	authServiceURL := os.Getenv("AUTH_SERVICE_URL")
+	reqBody := bytes.NewBuffer([]byte(fmt.Sprintf(`{"token": "%s"}`, tokenCookie)))
+
+	req, err := http.NewRequest("POST", authServiceURL, reqBody)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create request for auth service"})
+		c.Abort()
+		return
+	}
+
+	req.Header.Set("Content-Type", "application/json")
+
+	// Ensure cookies are sent with the request
+	client := &http.Client{}
+	req.AddCookie(&http.Cookie{Name: "token", Value: tokenCookie})
+
+	resp, err := client.Do(req)
+	if err != nil {
+		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request to auth service"})
+		c.Abort()
+		return
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+		c.Abort()
+		return
+	}
+
+	// Token is valid, proceed to the next handler
+	c.Next()
 }
 
 func getStringValue(av types.AttributeValue) string {
@@ -204,6 +254,8 @@ func main() {
 		AllowOrigins:     []string{"http://localhost:3000"},
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
 	}))
+
+	r.Use(validateTokenMiddleware)
 
 	r.GET("/course/get", getCourses)
 	r.GET("/course/get/:courseId", getCourseById)
