@@ -123,7 +123,7 @@ const Home = () => {
         </section>
       </CardContainer>
       <p className="text-2xl font-bold w-fit mt-3 mb-5">Popular Courses</p>
-      <div className="grid grid-cols-3 items-center gap-4 w-fit">
+      <div className="grid md:grid-cols-1 lg:grid-cols-3 items-center gap-4 w-fit">
         {courses.length !== 0 ? (
           courses.map((item, index) => (
             <CourseItem

@@ -17,9 +17,9 @@ const CourseItem = ({ course, onCheckOut, isLoading }) => {
           alt=""
         />
       </div>
-      <div className="w-2/3">
+      <div className="w-2/3 h-full flex flex-col justify-between">
         <div className="flex items-center justify-between">
-          <p className="text-xl font-bold text-start">{course.title}</p>
+          <p className="text-xl font-bold text-start w-2/3">{course.title}</p>
           <p className="text-orange-500 text-xl font-bold">${course.price}</p>
         </div>
         <div className="mb-5 mt-2 text-start">
@@ -38,7 +38,7 @@ const CourseItem = ({ course, onCheckOut, isLoading }) => {
               "bg-blue-500 hover:bg-blue-700 hover:duration-100 cursor-pointer"
             }
           >
-            {isLoading ? <Spinner /> : "Enroll now"}
+            {isLoading ? <Spinner /> : "Enroll"}
           </Button>
         </div>
       </div>
