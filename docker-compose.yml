@@ -24,6 +24,8 @@ services:
       - COGNITO_USER_POOL_ID=ap-northeast-1_ZGhPseTQk
       - COGNITO_CLIENT_ID=2fk992r46r12ig1eb7p3r8n9q9
       - CORS_ORIGIN=http://localhost
+    volumes:
+      - ~/.aws:/root/.aws:ro
 
   course_service:
     image: "thanh1994/elearn-course-service"
@@ -44,6 +46,8 @@ services:
       - CORS_ORIGIN=http://localhost
     depends_on:
       - mongodb
+    volumes:
+      - ~/.aws:/root/.aws:ro
 
   payment_service:
     image: "thanh1994/elearn-payment-service"
@@ -62,8 +66,11 @@ services:
       - CORS_ORIGIN=http://localhost
       - PAYMENT_SUCCESS_URL=http://localhost/payment/success
       - PAYMENT_CANCEL_URL=http://localhost/payment/cancel
+      - AWS_PROFILE=default
     depends_on:
       - mongodb
+    volumes:
+      - ~/.aws:/root/.aws:ro
 
   mongodb:
     image: public.ecr.aws/docker/library/mongo:8.0.5-rc2-noble
