@@ -1,6 +1,55 @@
 version: "3.8"
 
 services:
+  ui:
+    image: "thanh1994/elearn-ui"
+    build:
+      context: /ui
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 80:80
+
+  auth_service:
+    image: ""
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      - AWS_REGION=ap-northeast-1
+      - COGNITO_USER_POOL_ID=ap-northeast-1_ZGhPseTQk
+      - COGNITO_CLIENT_ID=2fk992r46r12ig1eb7p3r8n9q9
+
+  course_service:
+    image: "thanh1994/elearn-course-service"
+    build:
+      context: /course_service
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 4000:4000
+    environment:
+      - DYNAMODB_TABLE=course
+      - S3_BUCKET=caicanuoc123
+      - AWS_REGION=ap-northeast-1
+      - DATABASE_URL="mongodb://mongodb:27017/course?authSource=admin"
+      - DATABASE_NAME=course
+      - AUTH_SERVICE_URL=http://auth_service:8080/auth/validate
+
+  payment_service:
+    image: "thanh1994/elearn-payment-service"
+    build:
+      context: payment_service
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 4001:4001
+    environment:
+      - PORT=4001
+      - DATABASE_URL="mongodb://mongodb:27017/course?authSource=admin"
+      - STRIPE_SECRET=sk_test_51OazL7D3eD5YrsaQOK6xu6FCytoLxE5Sd5m87U9aAasG2PzR4jJEstsCao5qgd6bvMJCp1gG36qq1peZph0feIR4001YMAg8au
+      - COURSE_SERVICE_URL=http://course_service:4000/course
+
   mongodb:
     image: public.ecr.aws/docker/library/mongo:8.0.5-rc2-noble
     restart: always

@@ -22,55 +22,6 @@ const Payment = () => {
     fetchEnrolledCourses();
   }, [userId]);
 
-  const handleDeleteCourse = async (id, courseId, userId) => {
-    try {
-      const res = await axios.delete(
-        `${process.env.REACT_APP_BACKEND_URL}course/delete`,
-        {
-          data: {
-            id,
-            courseId,
-            userId,
-          },
-        }
-      );
-      notify("Delete successfully", "success");
-      fetchEnrolledCourses();
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleCheckOut = async () => {
-    try {
-      const stripePromise = await loadStripe(process.env.REACT_APP_STRIPE_PK);
-      const headers = { "Content-Type": "application/json" };
-
-      const res = await axios.post(
-        `${process.env.REACT_APP_PAYMENT_SERVICE_URL}/checkout`,
-        {
-          products: myRecipt,
-          name,
-          email,
-          userId,
-        },
-        { headers }
-      );
-
-      const session = await res.data;
-      const result = stripePromise.redirectToCheckout({
-        sessionId: session.id,
-      });
-
-      if (result.error) {
-        console.error(result.error);
-      }
-    } catch (error) {
-      notify("Error", "error");
-      console.error(error);
-    }
-  };
-
   return (
     <CardContainer className={""}>
       <div className="relative overflow-x-auto">

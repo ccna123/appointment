@@ -62,7 +62,9 @@ const Home = () => {
 
   const fetchCourses = async () => {
     try {
-      const res = await axios.get(`${process.env.REACT_APP_BACKEND_URL}/get`);
+      const res = await axios.get(
+        `${process.env.REACT_APP_COURSE_SERVICE_URL}/get`
+      );
       setCourses(res.data);
     } catch (error) {
       console.error(error);
