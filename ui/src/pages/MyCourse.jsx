@@ -21,8 +21,8 @@ const MyCourse = () => {
   return (
     <div className="grid grid-cols-3 mt-4 items-center gap-4">
       {myCourses.length !== 0 ? (
-        myCourses.map((course) => {
-          return <MyCourseItem course={course} />;
+        myCourses.map((course, index) => {
+          return <MyCourseItem key={index} course={course} />;
         })
       ) : (
         <p className="text-xl font-bold">There are no courses</p>
