@@ -8,7 +8,10 @@ const PaymentSuccess = () => {
     async function handlePaySuccess() {
       try {
         await axios.get(
-          `${process.env.REACT_APP_PAYMENT_SERVICE_URL}/success?userId=${userId}`
+          `${process.env.REACT_APP_PAYMENT_SERVICE_URL}/success?userId=${userId}`,
+          {
+            withCredentials: true,
+          }
         );
       } catch (error) {
         console.error(error);

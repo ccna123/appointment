@@ -40,6 +40,7 @@ require (
 require (
 	github.com/MicahParks/keyfunc v1.9.0
 	github.com/gin-gonic/gin v1.10.0
+	github.com/golang-jwt/jwt v3.2.2+incompatible
 	github.com/jmespath/go-jmespath v0.4.0 // indirect
 	github.com/joho/godotenv v1.5.1
 )

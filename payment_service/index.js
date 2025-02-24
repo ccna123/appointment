@@ -7,6 +7,7 @@ const orderSchema = require("./model/orderSchema");
 const enrollSchema = require("./model/enrollSchema");
 const axios = require("axios");
 const app = express();
+const cookieParser = require("cookie-parser");
 
 const corsOption = {
   origin: "http://localhost:3000",
@@ -16,6 +17,7 @@ const corsOption = {
 
 app.use(express.json());
 app.use(cors(corsOption));
+app.use(cookieParser());
 
 mongoose
   .connect(process.env.DATABASE_URL)
@@ -83,6 +85,7 @@ app.post("/payment/checkout", async (req, res) => {
 app.get("/payment/success", async (req, res) => {
   try {
     const { userId } = req.query;
+    const access_token = req.cookies.access_token;
     const orderInfo = await orderSchema.findOne({
       userId,
       paymentStatus: "Unpaid",
@@ -108,9 +111,13 @@ app.get("/payment/success", async (req, res) => {
       }
 
       const course = await axios.get(
-        `${process.env.COURSE_SERVICE_URL}/get/${orderInfo.courseId}`
+        `${process.env.COURSE_SERVICE_URL}/get/${orderInfo.courseId}`,
+        {
+          headers: {
+            Cookie: `access_token=${access_token}`, // Manually set the cookie
+          },
+        }
       );
-      console.log(course);
 
       const newRecord = await enrollSchema.create({
         userId,
