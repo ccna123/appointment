@@ -11,7 +11,10 @@ services:
       - 80:80
 
   auth_service:
-    image: ""
+    image: "thanh1994/elearn-auth-service"
+    build:
+      context: /auth_service
+      dockerfile: Dockerfile
     restart: always
     ports:
       - 8080:8080
