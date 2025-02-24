@@ -10,7 +10,7 @@ const app = express();
 const cookieParser = require("cookie-parser");
 
 const corsOption = {
-  origin: "http://localhost:3000",
+  origin: process.env.CORS_ORIGIN || "http://localhost:3000",
   allowedHeaders: "Content-Type,Authorization",
   credentials: true,
 };
@@ -62,8 +62,12 @@ app.post("/payment/checkout", async (req, res) => {
       payment_method_types: ["card"],
       line_items: lineItems,
       mode: "payment",
-      success_url: "http://localhost:3000/payment/success",
-      cancel_url: "http://localhost:3000/payment/cancel",
+      success_url:
+        process.env.PAYMENT_SUCCESS_URL ||
+        "http://localhost:3000/payment/success",
+      cancel_url:
+        process.env.PAYMENT_CANCEL_URL ||
+        "http://localhost:3000/payment/cancel",
     });
 
     await orderSchema.create({

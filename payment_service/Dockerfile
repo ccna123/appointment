@@ -4,9 +4,6 @@ FROM node:23-bookworm-slim AS build
 # Set working directory
 WORKDIR /express
 
-# Install system dependencies (openssl is required for Prisma)
-RUN apt-get update -y && apt-get install -y openssl && \
-    rm -rf /var/lib/apt/lists/*
 
 # Update npm to the latest version
 RUN npm install -g npm@latest
@@ -26,10 +23,6 @@ FROM node:23-bookworm-slim
 # Set working directory for the final image
 WORKDIR /express
 
-# Install system dependencies (openssl is required for Prisma)
-RUN apt-get update -y && apt-get install -y openssl && \
-    rm -rf /var/lib/apt/lists/*
-
 # Copy only the necessary files from the build stage (dependencies and built app)
 COPY --from=build /express /express
 
@@ -37,4 +30,4 @@ COPY --from=build /express /express
 EXPOSE 4000
 
 # Start the application with migrations
-CMD ["sh", "-c", "npx prisma generate && npx db push && npm start"]
+CMD ["sh", "-c", "npm start"]
