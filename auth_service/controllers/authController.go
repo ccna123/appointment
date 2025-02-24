@@ -4,12 +4,14 @@ import (
 	"auth_service_go/helper"
 	"auth_service_go/initializer"
 	"auth_service_go/models"
+	"context"
 	"log"
 	"net/http"
 
 	"github.com/MicahParks/keyfunc"
-	"github.com/aws/aws-sdk-go/aws"
-	"github.com/aws/aws-sdk-go/service/cognitoidentityprovider"
+	"github.com/aws/aws-sdk-go-v2/aws"
+	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
+	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider/types"
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v4"
 )
@@ -24,15 +26,15 @@ func Login(c *gin.Context) {
 	}
 	// Authenticate user with Cognito
 	authInput := &cognitoidentityprovider.InitiateAuthInput{
-		AuthFlow: aws.String("USER_PASSWORD_AUTH"),
-		AuthParameters: map[string]*string{
-			"USERNAME": aws.String(req.Email),
-			"PASSWORD": aws.String(req.Password),
+		AuthFlow: types.AuthFlowTypeUserPasswordAuth,
+		AuthParameters: map[string]string{
+			"USERNAME": req.Email,
+			"PASSWORD": req.Password,
 		},
 		ClientId: aws.String(initializer.ClientID),
 	}
 
-	result, err := initializer.CognitoClient.InitiateAuth(authInput)
+	result, err := initializer.CognitoClient.InitiateAuth(context.TODO(), authInput)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"mess": "Invalid credentials"})
 		return
@@ -68,7 +70,7 @@ func Signup(c *gin.Context) {
 		ClientId: aws.String(initializer.ClientID),
 		Username: aws.String(req.Email),
 		Password: aws.String(req.Password),
-		UserAttributes: []*cognitoidentityprovider.AttributeType{
+		UserAttributes: []types.AttributeType{
 			{
 				Name:  aws.String("name"),
 				Value: aws.String(req.Name),
@@ -84,7 +86,7 @@ func Signup(c *gin.Context) {
 		},
 	}
 
-	_, err := initializer.CognitoClient.SignUp(input)
+	_, err := initializer.CognitoClient.SignUp(context.TODO(), input)
 	if err != nil {
 		c.JSON(http.StatusConflict, gin.H{
 			"details": err.Error(),
@@ -92,10 +94,10 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	_, err = initializer.CognitoClient.AdminUpdateUserAttributes(&cognitoidentityprovider.AdminUpdateUserAttributesInput{
+	_, err = initializer.CognitoClient.AdminUpdateUserAttributes(context.TODO(), &cognitoidentityprovider.AdminUpdateUserAttributesInput{
 		UserPoolId: aws.String(initializer.UserPoolID),
 		Username:   aws.String(req.Email),
-		UserAttributes: []*cognitoidentityprovider.AttributeType{
+		UserAttributes: []types.AttributeType{
 			{
 				Name:  aws.String("email_verified"),
 				Value: aws.String("true"),
@@ -108,7 +110,7 @@ func Signup(c *gin.Context) {
 		return
 	}
 
-	_, err = initializer.CognitoClient.AdminConfirmSignUp(&cognitoidentityprovider.AdminConfirmSignUpInput{
+	_, err = initializer.CognitoClient.AdminConfirmSignUp(context.TODO(), &cognitoidentityprovider.AdminConfirmSignUpInput{
 		UserPoolId: aws.String(initializer.UserPoolID),
 		Username:   aws.String(req.Email),
 	})
