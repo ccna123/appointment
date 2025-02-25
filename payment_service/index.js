@@ -142,7 +142,7 @@ app.get("/payment/success", async (req, res) => {
   }
 });
 
-app.delete("/payment/cancel", async (req, res) => {
+app.get("/payment/cancel", async (req, res) => {
   try {
     const { userId } = req.query;
     const orders = await orderSchema.find({
