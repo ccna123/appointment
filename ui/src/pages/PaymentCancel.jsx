@@ -12,7 +12,7 @@ const PaymentCancel = () => {
         const res = await axios.get(
           `${
             process.env.REACT_APP_PAYMENT_SERVICE_URL ||
-            "http://localhost:4010/payment"
+            "http://localhost:4010/checkout"
           }/cancel?userId=${userId}`
         );
       } catch (error) {

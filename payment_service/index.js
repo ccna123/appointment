@@ -64,10 +64,10 @@ app.post("/payment/checkout", async (req, res) => {
       mode: "payment",
       success_url:
         process.env.PAYMENT_SUCCESS_URL ||
-        "http://localhost:3000/payment/success",
+        "http://localhost:3000/checkout/success",
       cancel_url:
         process.env.PAYMENT_CANCEL_URL ||
-        "http://localhost:3000/payment/cancel",
+        "http://localhost:3000/checkout/cancel",
     });
 
     await orderSchema.create({
