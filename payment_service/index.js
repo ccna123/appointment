@@ -143,12 +143,17 @@ app.get("/payment/success", async (req, res) => {
 });
 
 app.get("/payment/cancel", async (req, res) => {
+  console.log("Client call");
+
   try {
     const { userId } = req.query;
     const orders = await orderSchema.find({
       userId,
       paymentStatus: "Unpaid",
     });
+
+    console.log("User id: ", userId);
+    console.log("Matching unpaid orders:", orders);
 
     if (!orders || orders.length === 0) {
       return res.status(404).json({ message: "No unpaid orders found" });
