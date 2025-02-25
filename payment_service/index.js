@@ -194,6 +194,8 @@ app.get("/payment/receipt", async (req, res) => {
           : null;
       })
     );
+    console.log(`sessionIds: ${sessionIds}`);
+    console.log(`paymentIntents: ${paymentIntents}`);
 
     const latestCharges = await Promise.all(
       paymentIntents.map(async (paymentIntent) => {
