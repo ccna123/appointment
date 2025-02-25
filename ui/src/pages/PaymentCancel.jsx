@@ -5,6 +5,8 @@ import axios from "axios";
 const PaymentCancel = () => {
   const { userId } = JSON.parse(localStorage.getItem("user")).user || "";
   useEffect(() => {
+    console.log(`use effect call: ${userId}`);
+
     async function handlePayCancel() {
       try {
         const res = await axios.get(
