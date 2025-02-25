@@ -18,10 +18,10 @@ const LayoutLeft = () => {
         break;
 
       case 2:
-        navigate("/payment/");
+        navigate("/payment");
         break;
       case 3:
-        navigate("/mycourse/");
+        navigate("/mycourse");
         break;
       case 4:
         navigate("/");
