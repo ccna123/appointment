@@ -209,8 +209,8 @@ app.get("/payment/receipt", async (req, res) => {
 
     return res.status(200).json(receipt_urls);
   } catch (error) {
-    return res.status(500).json(error);
     console.error(error);
+    return res.status(500).json(error);
   }
 });
 
