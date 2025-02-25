@@ -28,6 +28,6 @@ func main() {
 	r.POST("/auth/login", controllers.Login)
 	r.POST("/auth/signup", controllers.Signup)
 	r.POST("/auth/validate", controllers.ValidateToken)
-	r.Run(fmt.Sprintf("%s", os.Getenv("PORT")))
+	r.Run(fmt.Sprintf(":%s", os.Getenv("PORT")))
 
 }

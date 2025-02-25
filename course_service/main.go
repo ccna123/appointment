@@ -48,5 +48,5 @@ func main() {
 	r.GET("/course/get/:courseId", middleware.ValidateTokenMiddleware, controllers.GetCourseById)
 	r.GET("/course/enrolled/:userId", middleware.ValidateTokenMiddleware, controllers.GetEnrolled)
 
-	r.Run(fmt.Sprintf("%s", os.Getenv("PORT")))
+	r.Run(fmt.Sprintf(":%s", os.Getenv("PORT")))
 }

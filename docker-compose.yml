@@ -44,7 +44,7 @@ services:
       - AWS_REGION=ap-northeast-1
       - DATABASE_URL=mongodb://mongodb:27017/course?authSource=admin
       - DATABASE_NAME=course
-      - AUTH_SERVICE_URL=http://auth_service:8080/auth/validate
+      - AUTH_SERVICE_URL=http://auth_service:4020/auth/validate
       - CORS_ORIGIN=http://localhost
     depends_on:
       - mongodb
