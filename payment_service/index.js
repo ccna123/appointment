@@ -179,7 +179,7 @@ app.get("/payment/receipt", async (req, res) => {
     });
 
     if (records.length === 0) {
-      return res.status(404).send();
+      return res.status(404).json({ mess: "Not found receipt" });
     }
 
     const sessionIds = records.map((record) => {
