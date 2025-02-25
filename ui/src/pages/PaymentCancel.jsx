@@ -2,7 +2,7 @@ import React, { useEffect } from "react";
 import CardContainer from "../component/Card/Container";
 import axios from "axios";
 
-const PaymentSuccess = () => {
+const PaymentCancel = () => {
   const { userId } = JSON.parse(localStorage.getItem("user")).user || "";
   useEffect(() => {
     async function handlePayCancel() {
@@ -18,7 +18,7 @@ const PaymentSuccess = () => {
       }
     }
     handlePayCancel();
-  }, []);
+  }, [userId]);
   return (
     <CardContainer className={"h-full flex items-center justify-center"}>
       <div className="shadow-[0_3px_10px_rgb(0,0,0,0.2)] p-4 rounded-lg w-[50%]">
@@ -29,4 +29,4 @@ const PaymentSuccess = () => {
   );
 };
 
-export default PaymentSuccess;
+export default PaymentCancel;
