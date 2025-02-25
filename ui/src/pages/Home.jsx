@@ -13,7 +13,7 @@ import { loadStripe } from "@stripe/stripe-js";
 const Home = () => {
   const [selectedFooterItem, setSelectedFooterItem] = useState(0);
   const [courses, setCourses] = useState([]);
-  const [isLoading, setIsLoading] = useState(false);
+  const [, setIsLoading] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const navigate = useNavigate();
 

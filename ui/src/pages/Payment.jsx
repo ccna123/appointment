@@ -1,13 +1,11 @@
 import React, { useEffect, useState } from "react";
 import CardContainer from "../component/Card/Container";
 import axios from "axios";
-import notify from "../ultil/notify";
 import "react-toastify/dist/ReactToastify.css";
-import { loadStripe } from "@stripe/stripe-js";
 
 const Payment = () => {
   const [myRecipt, setMyRecipt] = useState([]);
-  const { userId, email, name } = JSON.parse(localStorage.getItem("user")).user;
+  const { userId } = JSON.parse(localStorage.getItem("user")).user;
   const fetchEnrolledCourses = async () => {
     try {
       const res = await axios.get(
