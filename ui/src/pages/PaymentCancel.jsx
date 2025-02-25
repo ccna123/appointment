@@ -8,7 +8,10 @@ const PaymentSuccess = () => {
     async function handlePayCancel() {
       try {
         await axios.delete(
-          `${process.env.REACT_APP_PAYMENT_SERVICE_URL}/cancel?userId=${userId}`
+          `${
+            process.env.REACT_APP_PAYMENT_SERVICE_URL ||
+            "http://localhost:4010/payment"
+          }/cancel?userId=${userId}`
         );
       } catch (error) {
         console.error(error);

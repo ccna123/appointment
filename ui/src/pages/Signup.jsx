@@ -22,7 +22,9 @@ const Signup = () => {
   const onSubmit = async (data) => {
     try {
       const res = await axios.post(
-        `${process.env.REACT_APP_AUTH_SERVICE_URL}signup`,
+        `${
+          process.env.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
+        }signup`,
         {
           email: data.email,
           password: data.password,

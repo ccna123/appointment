@@ -8,7 +8,10 @@ const MyCourse = () => {
   const fetchEnrolledCourses = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_COURSE_SERVICE_URL}/enrolled/${userId}`
+        `${
+          process.env.REACT_APP_COURSE_SERVICE_URL ||
+          "http://localhost:4000/course"
+        }/enrolled/${userId}`
       );
       setMyCourses(res.data);
     } catch (error) {

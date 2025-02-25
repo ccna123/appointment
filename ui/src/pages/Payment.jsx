@@ -9,7 +9,9 @@ const Payment = () => {
   const fetchEnrolledCourses = async () => {
     try {
       const res = await axios.get(
-        `${process.env.REACT_APP_PAYMENT_SERVICE_URL}/receipt?userId=${userId}`
+        `${
+          process.env.REACT_APP_PAYMENT_SERVICE_URL || "http://localhost:4010"
+        }/receipt?userId=${userId}`
       );
       setMyRecipt(res.data);
     } catch (error) {
