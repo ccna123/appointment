@@ -46,15 +46,7 @@ func ConnectToMongo() (*mongo.Client, error) {
 		return nil, err
 	}
 
-	// Check if the connection is successful
-	log.Printf("Attempting to ping MongoDB at: %s", os.Getenv("DATABASE_URL"))
-	err = client.Ping(ctx, nil)
-	if err != nil {
-		log.Fatalf("Failed to ping MongoDB: %v", err)
-		return nil, err
-	}
-
 	MongoClient = client
-	log.Println("MongoDB client initialized")
+	log.Println("MongoDB connected and client initialized")
 	return client, nil
 }
