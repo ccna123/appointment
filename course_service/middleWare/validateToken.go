@@ -3,6 +3,7 @@ package middleware
 import (
 	"bytes"
 	"fmt"
+	"log"
 	"net/http"
 	"os"
 
@@ -14,6 +15,7 @@ func ValidateTokenMiddleware(c *gin.Context) {
 	tokenCookie, err := c.Cookie("access_token")
 	if err != nil || tokenCookie == "" {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Missing or invalid token"})
+		log.Fatal(err.Error())
 		c.Abort()
 		return
 	}
@@ -25,6 +27,7 @@ func ValidateTokenMiddleware(c *gin.Context) {
 	req, err := http.NewRequest("POST", authServiceURL, reqBody)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to create request for auth service"})
+		log.Fatal(err.Error())
 		c.Abort()
 		return
 	}
@@ -38,6 +41,7 @@ func ValidateTokenMiddleware(c *gin.Context) {
 	resp, err := client.Do(req)
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Failed to send request to auth service"})
+		log.Fatal(err.Error())
 		c.Abort()
 		return
 	}
@@ -45,6 +49,7 @@ func ValidateTokenMiddleware(c *gin.Context) {
 
 	if resp.StatusCode != http.StatusOK {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+		log.Fatal(err.Error())
 		c.Abort()
 		return
 	}
