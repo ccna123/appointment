@@ -23,8 +23,8 @@ function App() {
             <Route path="/" element={<Home />} />
             <Route path="/payment/success" element={<PaymentSuccess />} />
             <Route path="/payment/cancel" element={<PaymentCancel />} />
-            <Route path="/payment/:userId" element={<Payment />} />
-            <Route path="/mycourse/:userId" element={<MyCourse />} />
+            <Route path="/payment" element={<Payment />} />
+            <Route path="/mycourse" element={<MyCourse />} />
           </Route>
         </Routes>
       </BrowserRouter>
