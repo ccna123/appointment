@@ -7,7 +7,7 @@ const PaymentSuccess = () => {
   useEffect(() => {
     async function handlePayCancel() {
       try {
-        await axios.delete(
+        await axios.get(
           `${
             process.env.REACT_APP_PAYMENT_SERVICE_URL ||
             "http://localhost:4010/payment"
