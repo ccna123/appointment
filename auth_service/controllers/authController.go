@@ -54,16 +54,22 @@ func Login(c *gin.Context) {
 	}
 
 	// Store the user's login session in Redis with a 24-hour expiration
-	userId := decoded_token["userId"].(string)
-	err = initializer.Rdb.Set(context.TODO(), userId, *result.AuthenticationResult.AccessToken, 24*time.Hour).Err()
+	sessionKey := "user:" + decoded_token["userId"].(string)
+	err = initializer.Rdb.HSet(context.TODO(), sessionKey, map[string]any{
+		"access_token":  *result.AuthenticationResult.AccessToken,
+		"refresh_token": *result.AuthenticationResult.RefreshToken,
+	}).Err()
 	if err != nil {
 		c.JSON(http.StatusInternalServerError, gin.H{"mess": "Failed to store session"})
 		log.Printf("Error storing session in Redis: %v", err)
 	}
+	// Set expiration time for the session
+	err = initializer.Rdb.Expire(context.TODO(), sessionKey, 24*time.Hour).Err()
+	if err != nil {
+		log.Printf("Error setting expiration in Redis: %v", err)
+	}
 
-	c.SetCookie("id_token", *result.AuthenticationResult.IdToken, 3600, "/", "", false, true) // HttpOnly, Secure for HTTPS
 	c.SetCookie("access_token", *result.AuthenticationResult.AccessToken, 3600, "/", "", false, true)
-	c.SetCookie("refresh_token", *result.AuthenticationResult.RefreshToken, 86400, "/", "", false, true)
 
 	c.JSON(http.StatusOK, gin.H{
 		"mess": "Login successful",
@@ -71,16 +77,16 @@ func Login(c *gin.Context) {
 	})
 }
 
-func Logout(c *gin.Context){
+func Logout(c *gin.Context) {
 	var req models.LogoutRequest
-	
+
 	// Manually parse body for sendBeacon
 	if err := c.ShouldBindJSON(&req); err != nil {
 		body, _ := io.ReadAll(c.Request.Body)
 		json.Unmarshal(body, &req)
 	}
 
-		// Validate UserId before deleting session
+	// Validate UserId before deleting session
 	if req.UserId == "" {
 		log.Printf("UserId is required")
 		c.JSON(http.StatusBadRequest, gin.H{"mess": "UserId is required"})
@@ -192,7 +198,7 @@ func ValidateToken(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"mess": "Invalid token"})
 		return
 	}
-	
+
 	log.Printf("Token is valid")
 	c.JSON(http.StatusOK, gin.H{
 		"message": "Token is valid",
@@ -209,7 +215,7 @@ func GetUserLoginStatus(c *gin.Context) {
 	}
 
 	// Retrieve the user's login status from Redis
-	access_token, err := initializer.Rdb.Get(context.TODO(), userId).Result()
+	access_token, err := initializer.Rdb.HGet(context.TODO(), "user:"+userId, "access_token").Result()
 	if err != nil {
 		if err == redis.Nil {
 			// User not found in Redis
@@ -223,18 +229,20 @@ func GetUserLoginStatus(c *gin.Context) {
 		return
 	}
 
-	err = validateToken(access_token); if err != nil {
+	err = validateToken(access_token)
+	if err != nil {
 		log.Printf("Token validation failed: %v", err)
 		c.JSON(http.StatusUnauthorized, gin.H{"mess": "Invalid token"})
 		return
-	} 
+	}
+
+	c.SetCookie("access_token", access_token, 3600, "/", "", false, true)
 
 	c.JSON(http.StatusOK, gin.H{
 		"mess":   "User login status retrieved successfully",
 		"status": "Ok",
 	})
 }
-
 
 // Private function to validate JWT token
 func validateToken(tokenStr string) error {
