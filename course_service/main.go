@@ -4,7 +4,6 @@ import (
 	"course_service/controllers"
 	"course_service/initializer"
 	middleware "course_service/middleWare"
-	"fmt"
 	"os"
 
 	"github.com/gin-contrib/cors"
@@ -48,5 +47,5 @@ func main() {
 	r.GET("/course/get/:courseId", middleware.ValidateTokenMiddleware, controllers.GetCourseById)
 	r.GET("/course/enrolled/:userId", middleware.ValidateTokenMiddleware, controllers.GetEnrolled)
 
-	r.Run(fmt.Sprintf(":%s", os.Getenv("PORT")))
+	r.Run("Course service listen on port 4000")
 }

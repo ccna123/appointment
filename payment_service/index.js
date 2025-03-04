@@ -221,6 +221,6 @@ app.get("/payment/receipt", async (req, res) => {
   }
 });
 
-app.listen(process.env.PORT, () => {
-  console.log(`Payment service listen on port ${process.env.PORT}`);
+app.listen("4010", () => {
+  console.log("Payment service listen on port 4010");
 });
