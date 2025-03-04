@@ -3,6 +3,7 @@ package main
 import (
 	"auth_service_go/controllers"
 	"auth_service_go/initializer"
+	"fmt"
 	"os"
 
 	"github.com/gin-contrib/cors"
@@ -27,6 +28,11 @@ func main() {
 	r.POST("/auth/login", controllers.Login)
 	r.POST("/auth/signup", controllers.Signup)
 	r.POST("/auth/validate", controllers.ValidateToken)
-	r.Run("Auth service listen on port 4020")
+	
+	port := "4020"
+	fmt.Printf("Auth service is listening on port %s\n", port)
+
+	// Start the server on the specified port
+	r.Run(":" + port)
 
 }
