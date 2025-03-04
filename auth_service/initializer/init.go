@@ -8,6 +8,7 @@ import (
 
 	"github.com/aws/aws-sdk-go-v2/config"
 	"github.com/aws/aws-sdk-go-v2/service/cognitoidentityprovider"
+	"github.com/go-redis/redis/v8"
 	"github.com/joho/godotenv"
 )
 
@@ -52,4 +53,19 @@ func InitCognitoParam() {
 	JwksURL = fmt.Sprintf("https://cognito-idp.%s.amazonaws.com/%s/.well-known/jwks.json", os.Getenv("AWS_REGION"), UserPoolID)
 
 	log.Println("Initialization complete: Cognito client and environment variables loaded.")
+}
+
+var Rdb *redis.Client
+func InitRedis() {
+	Rdb = redis.NewClient(&redis.Options{
+		Addr:     os.Getenv("REDIS_URL"), // Adjust to your Redis server address
+		Password: "",               // No password set (default)
+		DB:       0,                // Default DB
+	})
+
+	// Test the Redis connection
+	_, err := Rdb.Ping(context.TODO()).Result()
+	if err != nil {
+		log.Fatalf("Could not connect to Redis: %v", err)
+	}
 }

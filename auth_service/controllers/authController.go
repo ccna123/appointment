@@ -7,6 +7,7 @@ import (
 	"context"
 	"log"
 	"net/http"
+	"time"
 
 	"github.com/MicahParks/keyfunc"
 	"github.com/aws/aws-sdk-go-v2/aws"
@@ -46,6 +47,13 @@ func Login(c *gin.Context) {
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"mess": "Invalid token"})
 		return
+	}
+
+	// Store the user's login session in Redis with a 24-hour expiration
+	userId := decoded_token["sub"].(string)
+	err = initializer.Rdb.Set(context.TODO(), userId, "logged_in", 24*time.Hour).Err()
+	if err != nil {
+		log.Printf("Error storing session in Redis: %v", err)
 	}
 
 	c.SetCookie("id_token", *result.AuthenticationResult.IdToken, 3600, "/", "", false, true) // HttpOnly, Secure for HTTPS

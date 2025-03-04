@@ -15,6 +15,7 @@ func init() {
 		initializer.InitEnv()
 	}
 	initializer.InitCognitoParam()
+	initializer.InitRedis()
 }
 
 func main() {

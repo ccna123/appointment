@@ -49,7 +49,7 @@ func main() {
 	r.GET("/course/enrolled/:userId", middleware.ValidateTokenMiddleware, controllers.GetEnrolled)
 
 	port := "4000"
-	fmt.Printf("Auth service is listening on port %s\n", port)
+	fmt.Printf("Course service is listening on port %s\n", port)
 
 	// Start the server on the specified port
 	r.Run(":" + port)
