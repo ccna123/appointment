@@ -27,6 +27,8 @@ func main() {
 		AllowHeaders:     []string{"Origin", "Content-Type", "Accept"},
 	}))
 	r.POST("/auth/login", controllers.Login)
+	r.POST("/auth/logout", controllers.Logout)
+	r.GET("/auth/login/status/:userId",controllers.GetUserLoginStatus)
 	r.POST("/auth/signup", controllers.Signup)
 	r.POST("/auth/validate", controllers.ValidateToken)
 	

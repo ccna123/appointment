@@ -23,7 +23,7 @@ services:
       - AWS_REGION=ap-northeast-1
       - COGNITO_USER_POOL_ID=ap-northeast-1_ZGhPseTQk
       - COGNITO_CLIENT_ID=2fk992r46r12ig1eb7p3r8n9q9
-      - CORS_ORIGIN=http://localhost
+      - CORS_ORIGIN=http://localhost:3000
       - REDIS_URL=redis:6379
     volumes:
       - ~/.aws:/root/.aws:ro
@@ -44,7 +44,7 @@ services:
       - DATABASE_URL=mongodb://mongodb:27017/course?authSource=admin
       - DATABASE_NAME=course
       - AUTH_SERVICE_URL=http://auth_service:4020/auth/validate
-      - CORS_ORIGIN=http://localhost
+      - CORS_ORIGIN=http://localhost:3000
     depends_on:
       - mongodb
     volumes:
@@ -63,7 +63,7 @@ services:
       - DATABASE_URL=mongodb://mongodb:27017/course?authSource=admin
       - STRIPE_SECRET=sk_test_51OazL7D3eD5YrsaQOK6xu6FCytoLxE5Sd5m87U9aAasG2PzR4jJEstsCao5qgd6bvMJCp1gG36qq1peZph0feIR4001YMAg8au
       - COURSE_SERVICE_URL=http://course_service:4000/course
-      - CORS_ORIGIN=http://localhost
+      - CORS_ORIGIN=http://localhost:3000
       - PAYMENT_SUCCESS_URL=http://localhost/payment/success
       - PAYMENT_CANCEL_URL=http://localhost/payment/cancel
       - AWS_PROFILE=default
@@ -94,4 +94,4 @@ services:
 
 volumes:
   mongo_data:
-  redis_data
+  redis_data:

@@ -64,8 +64,10 @@ func InitRedis() {
 	})
 
 	// Test the Redis connection
-	_, err := Rdb.Ping(context.TODO()).Result()
+	pong, err := Rdb.Ping(context.TODO()).Result()
 	if err != nil {
 		log.Fatalf("Could not connect to Redis: %v", err)
 	}
+	// Log the successful connection and the Pong message from Redis
+    log.Printf("Connected to Redis: %v", pong)
 }

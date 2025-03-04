@@ -1,8 +1,9 @@
-import React, { useState } from "react";
+import React, { useEffect } from "react";
 import { nav_items } from "../../data/item_list";
 import Button from "../Button/Button";
 import CardContainer from "../Card/Container";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const LayoutLeft = () => {
   const navigate = useNavigate();
@@ -10,6 +11,25 @@ const LayoutLeft = () => {
   const { user = {} } = userData; // Default to an empty object if user is missing
 
   const { userId = "", role: userRole = "", name = "" } = user;
+
+  const handleLogOut = async () => {
+    try {
+      const res = await axios.post(
+        `${
+          process.env.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
+        }/logout`,
+        {
+          userId,
+        }
+      );
+      if (res.status === 200) {
+        localStorage.removeItem("user");
+        navigate("/");
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   const handleClickItemMenu = (itemId) => {
     switch (itemId) {
@@ -30,8 +50,7 @@ const LayoutLeft = () => {
         if (!userId) {
           navigate("/login");
         } else {
-          localStorage.removeItem("user");
-          navigate("/");
+          handleLogOut();
         }
         break;
 
@@ -39,6 +58,27 @@ const LayoutLeft = () => {
         break;
     }
   };
+
+  const getUserLoginStatus = async () => {
+    try {
+      const res = await axios.get(
+        `${
+          process.env.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
+        }/login/status/${userId}`
+      );
+      if (res.status === 200) {
+        return;
+      }
+    } catch (error) {
+      console.error(error);
+      localStorage.clear();
+      navigate("/");
+    }
+  };
+
+  useEffect(() => {
+    getUserLoginStatus();
+  }, [userId]);
   return (
     <CardContainer className={"h-full"}>
       <img src="/education.png" className="mx-auto mb-4" alt="" />
