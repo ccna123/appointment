@@ -10,6 +10,7 @@ import Layout from "./component/Layout/Layout";
 import Payment from "./pages/Payment";
 import PaymentSuccess from "./pages/PaymentSuccess";
 import PaymentCancel from "./pages/PaymentCancel";
+import Playground from "./pages/Playground";
 
 function App() {
   axios.defaults.withCredentials = true;
@@ -21,6 +22,7 @@ function App() {
           <Route path="/signup" element={<Signup />} />
           <Route element={<Layout />}>
             <Route path="/" element={<Home />} />
+            <Route path="/playground" element={<Playground />} />
             <Route path="/checkout/success" element={<PaymentSuccess />} />
             <Route path="/checkout/cancel" element={<PaymentCancel />} />
             <Route path="/payment" element={<Payment />} />

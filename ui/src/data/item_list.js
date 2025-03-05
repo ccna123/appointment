@@ -24,6 +24,11 @@ export const nav_items = [
     title: "Login",
     icon: "fa-solid fa-right-to-bracket",
   },
+  {
+    id: 6,
+    title: "Playground",
+    icon: "fa-solid fa-play",
+  },
 ];
 
 export const social = [

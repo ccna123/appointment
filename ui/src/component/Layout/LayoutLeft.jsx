@@ -53,6 +53,9 @@ const LayoutLeft = () => {
           handleLogOut();
         }
         break;
+      case 6:
+        navigate("/playground");
+        break;
 
       default:
         break;
@@ -91,7 +94,7 @@ const LayoutLeft = () => {
             handleClickItemMenu(item.id);
           }}
           key={index}
-          className="mb-2 flex items-center text-xl text-gray-500 font-bold space-x-2 gap-4 p-4 cursor-pointer hover:text-blue-500 hover:font-bold hover:bg-blue-100 rounded-xl hover:duration-100"
+          className="mb-2 flex items-center text-xl text-gray-500 font-bold space-x-2 gap-3 p-3 cursor-pointer hover:text-blue-500 hover:font-bold hover:bg-blue-100 rounded-xl hover:duration-100"
         >
           <i className={item.icon}></i>
           <p>{userId && item.title === "Login" ? "Logout" : item.title}</p>
