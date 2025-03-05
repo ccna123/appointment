@@ -15,29 +15,31 @@ const Playground = () => {
         const res = await axios.post(
           `${process.env.REACT_APP_PLAYROUND_URL}/container/spawn`
         );
-        setContainerInfo({
-          containerUrl: res.data.url,
-          containerName: res.data.containerName,
-        });
+        setInterval(() => {
+          setContainerInfo({
+            containerUrl: res.data.url,
+            containerName: res.data.containerName,
+          });
+        }, 6000);
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching container URL:", error);
       }
     };
 
-    fetchContainerUrl();
-    return () => {
-      axios
-        .delete(`${process.env.REACT_APP_PLAYROUND_URL}/container/delete`, {
-          data: { containerName: containerInfo.containerName },
-        })
-        .then((res) => {
-          console.log(res);
-        })
-        .catch((error) => {
-          console.error("Error deleting container:", error);
-        });
-    };
+    // fetchContainerUrl();
+    // return () => {
+    //   axios
+    //     .delete(`${process.env.REACT_APP_PLAYROUND_URL}/container/delete`, {
+    //       data: { containerName: containerInfo.containerName },
+    //     })
+    //     .then((res) => {
+    //       console.log(res);
+    //     })
+    //     .catch((error) => {
+    //       console.error("Error deleting container:", error);
+    //     });
+    // };
   }, []);
 
   return (

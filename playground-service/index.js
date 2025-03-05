@@ -18,7 +18,7 @@ app.post("/playground/container/spawn", (req, res) => {
   const port = Math.floor(30000 + Math.random() * 1000); // Dynamic port allocation
 
   // Run a container (e.g., Jupyter Notebook, Code Server)
-  const command = `docker run --name ${containerName} -d -p ${port}:7681 alpine:latest sh -c "apk add --no-cache ttyd && ttyd --writable --client-option cursorBlink=true --client-option fontSize=18 -p 7681 sh"`;
+  const command = `docker run --name ${containerName} -d -p ${port}:7681 ubuntu:latest bash -c "apt update && apt install ttyd -y && ttyd --writable --client-option cursorBlink=true --client-option fontSize=18 -p 7681 /bin/bash --login"`;
 
   exec(command, (error, stdout) => {
     if (error) {
