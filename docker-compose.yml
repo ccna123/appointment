@@ -72,6 +72,18 @@ services:
     volumes:
       - ~/.aws:/root/.aws:ro
 
+  playground_service:
+    image: "playground"
+    build:
+      context: playground_service
+      dockerfile: Dockerfile
+    ports:
+      - 4030:4030
+    environment:
+      - ENV=prod
+    networks:
+      - kind
+
   mongodb:
     image: public.ecr.aws/docker/library/mongo:8.0.5-rc2-noble
     restart: always
@@ -95,3 +107,7 @@ services:
 volumes:
   mongo_data:
   redis_data:
+
+networks:
+  kind:
+    external: true
