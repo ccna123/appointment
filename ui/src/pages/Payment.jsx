@@ -2,11 +2,14 @@ import React, { useEffect, useState } from "react";
 import CardContainer from "../component/Card/Container";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
+import { useNavigate } from "react-router-dom";
 
 const Payment = () => {
   const [myRecipt, setMyRecipt] = useState([]);
-  const { userId } = JSON.parse(localStorage.getItem("user")).user;
-  const fetchEnrolledCourses = async () => {
+  const storedUser = localStorage.getItem("user");
+  const userId = storedUser ? JSON.parse(storedUser)?.user?.userId : null;
+  const navigate = useNavigate();
+  const getReceipt = async () => {
     try {
       const res = await axios.get(
         `${
@@ -20,7 +23,11 @@ const Payment = () => {
     }
   };
   useEffect(() => {
-    fetchEnrolledCourses();
+    if (!userId) {
+      navigate("/login");
+      return;
+    }
+    getReceipt();
   }, [userId]);
 
   return (

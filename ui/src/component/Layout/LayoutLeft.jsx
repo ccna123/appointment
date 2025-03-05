@@ -10,7 +10,7 @@ const LayoutLeft = () => {
   const userData = JSON.parse(localStorage.getItem("user")) || {}; // Ensure it's an object
   const { user = {} } = userData; // Default to an empty object if user is missing
 
-  const { userId = "", role: userRole = "", name = "" } = user;
+  const { userId = "", name = "" } = user;
 
   const handleLogOut = async () => {
     try {
@@ -77,7 +77,9 @@ const LayoutLeft = () => {
   };
 
   useEffect(() => {
-    getUserLoginStatus();
+    if (userId) {
+      getUserLoginStatus();
+    }
   }, [userId]);
   return (
     <CardContainer className={"h-full"}>
