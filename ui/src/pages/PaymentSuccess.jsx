@@ -9,7 +9,7 @@ const PaymentSuccess = () => {
       try {
         await axios.get(
           `${
-            process.env.REACT_APP_PAYMENT_SERVICE_URL ||
+            window.env.REACT_APP_PAYMENT_SERVICE_URL ||
             "http://localhost:4010/payment"
           }/success?userId=${userId}`,
           {

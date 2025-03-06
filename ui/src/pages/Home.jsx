@@ -29,12 +29,12 @@ const Home = () => {
         navigate("/login");
       }
       setIsLoading(true);
-      const stripePromise = await loadStripe(process.env.REACT_APP_STRIPE_PK);
+      const stripePromise = await loadStripe(window.env.REACT_APP_STRIPE_PK);
       const headers = { "Content-Type": "application/json" };
 
       const res = await axios.post(
         `${
-          process.env.REACT_APP_PAYMENT_SERVICE_URL ||
+          window.env.REACT_APP_PAYMENT_SERVICE_URL ||
           "http://localhost:4010/payment"
         }/checkout`,
         {
@@ -67,7 +67,7 @@ const Home = () => {
     try {
       const res = await axios.get(
         `${
-          process.env.REACT_APP_COURSE_SERVICE_URL ||
+          window.env.REACT_APP_COURSE_SERVICE_URL ||
           "http://localhost:4000/course"
         }/get`
       );

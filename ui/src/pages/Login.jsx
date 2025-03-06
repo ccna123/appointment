@@ -24,7 +24,7 @@ const Login = () => {
     try {
       const res = await axios.post(
         `${
-          process.env.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
+          window.env.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
         }/login`,
         {
           email: data.email,

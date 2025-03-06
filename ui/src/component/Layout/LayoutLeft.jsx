@@ -16,7 +16,7 @@ const LayoutLeft = () => {
     try {
       const res = await axios.post(
         `${
-          process.env.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
+          window.env.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
         }/logout`,
         {
           userId,
@@ -66,7 +66,7 @@ const LayoutLeft = () => {
     try {
       const res = await axios.get(
         `${
-          process.env.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
+          window.env.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
         }/login/status/${userId}`
       );
       if (res.status === 200) {
