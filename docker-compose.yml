@@ -65,7 +65,6 @@ services:
     ports:
       - 4010:4010
     environment:
-      - ENV=prod
       - DATABASE_URL=mongodb://mongodb:27017/course?authSource=admin
       - STRIPE_SECRET=sk_test_51OazL7D3eD5YrsaQOK6xu6FCytoLxE5Sd5m87U9aAasG2PzR4jJEstsCao5qgd6bvMJCp1gG36qq1peZph0feIR4001YMAg8au
       - COURSE_SERVICE_URL=http://course_service:4000/course
@@ -86,9 +85,8 @@ services:
     ports:
       - 4030:4030
     environment:
-      - ENV=prod
       - CORS_ORIGIN=http://localhost
-      - SERVICE_URL=http://localhost
+      - SERVICE_URL=http://localhost #ttyd service url in k8s
     volumes:
       - C:\appointment\playground_service\kind-config.yaml:/root/.kube/config
     networks:
