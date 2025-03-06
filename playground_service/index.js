@@ -13,7 +13,7 @@ const app = express();
 app.use(cors(corsOption));
 app.use(express.json());
 
-app.get("/playground/pods", (req, res) => {
+app.get("/playground/instance", (req, res) => {
   exec("kubectl get services -o json", (error, stdout, stderr) => {
     if (error) {
       return res.status(500).send(`Error: ${error.message}`);

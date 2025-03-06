@@ -13,7 +13,7 @@ const Playground = () => {
     const fetchRunningPods = async () => {
       try {
         const res = await axios.get(
-          `${window.env.REACT_APP_PLAYGROUND_URL}/pods`
+          `${window.env.REACT_APP_PLAYGROUND_URL}/instance`
         );
         setServiceList(res.data);
         setIsLoading(false);
