@@ -21,10 +21,10 @@ FROM nginx:stable-alpine
 COPY --from=build /react/build /usr/share/nginx/html
 
 # Copy custom NGINX config file
-COPY --from=build /react/nginx.conf /etc/nginx/nginx.conf
+COPY nginx.conf /etc/nginx/nginx.conf
 
 # add env.sh to docker-entrypoint.d
-COPY --from=build /react/inject_env.sh /docker-entrypoint.d/inject_env.sh
+COPY inject_env.sh /docker-entrypoint.d/inject_env.sh
 RUN chmod +x /docker-entrypoint.d/inject_env.sh
 
 EXPOSE 80
