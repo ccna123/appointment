@@ -64,8 +64,8 @@ services:
       - STRIPE_SECRET=sk_test_51OazL7D3eD5YrsaQOK6xu6FCytoLxE5Sd5m87U9aAasG2PzR4jJEstsCao5qgd6bvMJCp1gG36qq1peZph0feIR4001YMAg8au
       - COURSE_SERVICE_URL=http://course_service:4000/course
       - CORS_ORIGIN=http://localhost
-      - PAYMENT_SUCCESS_URL=http://localhost/payment/success
-      - PAYMENT_CANCEL_URL=http://localhost/payment/cancel
+      - PAYMENT_SUCCESS_URL=http://localhost/checkout/success
+      - PAYMENT_CANCEL_URL=http://localhost/checkout/cancel
       - AWS_PROFILE=default
     depends_on:
       - mongodb
