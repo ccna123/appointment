@@ -28,7 +28,7 @@ app.get("/playground/instance", (req, res) => {
       .filter((service) => service.metadata.name.includes("playground"))
       .map((service) => {
         // Return the service URL (adjust as necessary for your service type)
-        const serviceUrl = `${process.env.SERVICE_URL}:7681`;
+        const serviceUrl = `${process.env.SERVICE_URL}:7681/instance`;
         return { serviceUrl: serviceUrl, name: service.metadata.name };
       });
 
