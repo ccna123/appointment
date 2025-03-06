@@ -1,45 +1,27 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Spinner from "../component/Spinner";
+import CardContainer from "../component/Card/Container";
+import { useNavigate } from "react-router-dom";
 
 const Playground = () => {
-  const [containerInfo, setContainerInfo] = useState({
-    containerUrl: "",
-    containerName: "",
-  });
   const [isLoading, setIsLoading] = useState(true);
+  const [serviceList, setServiceList] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchContainerUrl = async () => {
+    const fetchRunningPods = async () => {
       try {
-        const res = await axios.post(
-          `${process.env.REACT_APP_PLAYROUND_URL}/container/spawn`
+        const res = await axios.get(
+          `${process.env.REACT_APP_PLAYROUND_URL}/pods`
         );
-        setInterval(() => {
-          setContainerInfo({
-            containerUrl: res.data.url,
-            containerName: res.data.containerName,
-          });
-        }, 6000);
+        setServiceList(res.data);
         setIsLoading(false);
       } catch (error) {
         console.error("Error fetching container URL:", error);
       }
     };
-
-    // fetchContainerUrl();
-    // return () => {
-    //   axios
-    //     .delete(`${process.env.REACT_APP_PLAYROUND_URL}/container/delete`, {
-    //       data: { containerName: containerInfo.containerName },
-    //     })
-    //     .then((res) => {
-    //       console.log(res);
-    //     })
-    //     .catch((error) => {
-    //       console.error("Error deleting container:", error);
-    //     });
-    // };
+    fetchRunningPods();
   }, []);
 
   return (
@@ -48,12 +30,26 @@ const Playground = () => {
       {isLoading ? (
         <Spinner />
       ) : (
-        <iframe
-          src={containerInfo.containerUrl}
-          frameBorder="0"
-          width={"100%"}
-          height={"750px"}
-        ></iframe>
+        <>
+          <section className="flex items-center gap-4">
+            {serviceList.map((service, index) => (
+              <CardContainer
+                key={index}
+                className={
+                  "flex items-center gap-4 text-xl cursor-pointer w-fit hover:shadow-[0_3px_10px_rgb(0,0,0,0.2)]"
+                }
+                onClick={() =>
+                  // open new browser window with the service URL
+                  window.open(service.serviceUrl, "_blank")
+                }
+              >
+                <img src={"/container.png"} alt="" className="w-14 h-14" />
+                <p>{service.name}</p>
+                <div className="w-4 h-4 rounded-full bg-green-600"></div>
+              </CardContainer>
+            ))}
+          </section>
+        </>
       )}
     </div>
   );

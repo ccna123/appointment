@@ -13,20 +13,26 @@ const app = express();
 app.use(cors(corsOption));
 app.use(express.json());
 
-app.get("/pods", (req, res) => {
-  exec("kubectl get pods -o json", (error, stdout, stderr) => {
+app.get("/playground/pods", (req, res) => {
+  exec("kubectl get services -o json", (error, stdout, stderr) => {
     if (error) {
       return res.status(500).send(`Error: ${error.message}`);
     }
     if (stderr) {
       return res.status(500).send(`Stderr: ${stderr}`);
     }
-    const pods = JSON.parse(stdout);
-    const alpinePods = pods.items
-      .filter((pod) => pod.metadata.name.includes("alpine"))
-      .map((pod) => pod.metadata.name);
 
-    res.json(alpinePods);
+    const services = JSON.parse(stdout);
+
+    const playgroundService = services.items
+      .filter((service) => service.metadata.name.includes("playground"))
+      .map((service) => {
+        // Return the service URL (adjust as necessary for your service type)
+        const serviceUrl = `${process.env.SERVICE_URL}:7681`;
+        return { serviceUrl: serviceUrl, name: service.metadata.name };
+      });
+
+    res.json(playgroundService);
   });
 });
 

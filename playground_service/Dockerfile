@@ -36,13 +36,7 @@ COPY --from=build /express /express
 # Check if kind-config.yaml exists, copy it if available
 RUN mkdir -p /root/.kube && \
     cd /root/.kube && \
-    touch config && \
-    ls -la /express && \
-    if [ -f /express/kind-config.yaml ]; then \
-    cp /express/kind-config.yaml /root/.kube/config; \
-    else \
-    echo "kind-config.yaml not found, skipping config copy"; \
-    fi
+    touch config
 
 # Expose the port your application listens on
 EXPOSE 4030

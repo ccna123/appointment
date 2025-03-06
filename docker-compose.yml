@@ -81,6 +81,8 @@ services:
       - 4030:4030
     environment:
       - ENV=prod
+    volumes:
+      - C:\appointment\playground_service\kind-config.yaml:/root/.kube/config
     networks:
       - kind
 
