@@ -1,12 +1,10 @@
 #!/bin/sh
-for i in $(env | grep REACT_APP_)
-do
+for i in $(env | grep REACT_APP_); do
     key=$(echo $i | cut -d '=' -f 1)
-    value=$(echo $i | cut -d '=' -f 2-)
-    # sed All files
-    # find /usr/share/nginx/html -type f -exec sed -i "s|${key}|${value}|g" '{}' +
+    value=$(echo $i | cut -d '=' -f 2- | sed 's/[&/\]/\\&/g') # Escape special characters
 
-    # sed JS and CSS only
+    echo "Replacing: $key -> $value"
+
     find /usr/share/nginx/html -type f -name '*.js' -exec sed -i "s|${key}|${value}|g" '{}' +
 done
 echo 'done'
