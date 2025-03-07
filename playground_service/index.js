@@ -30,7 +30,7 @@ app.get("/playground", (req, res) => {
       )
       .map((service) => {
         // Return the service URL (adjust as necessary for your service type)
-        const serviceUrl = `instance.${process.env.SERVICE_URL}:7681`;
+        const serviceUrl = `${process.env.SERVICE_URL}:7681`;
         return { serviceUrl: serviceUrl, name: service.metadata.name };
       });
 
