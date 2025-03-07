@@ -15,8 +15,7 @@ const LayoutLeft = () => {
   const handleLogOut = async () => {
     try {
       const res = await axios.post(
-        `${
-          window.env.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
+        `${window.env.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
         }/logout`,
         {
           userId,
@@ -54,7 +53,7 @@ const LayoutLeft = () => {
         }
         break;
       case 6:
-        navigate("/playground");
+        navigate("/practice");
         break;
 
       default:
@@ -65,8 +64,7 @@ const LayoutLeft = () => {
   const getUserLoginStatus = async () => {
     try {
       const res = await axios.get(
-        `${
-          window.env.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
+        `${window.env.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
         }/login/status/${userId}`
       );
       if (res.status === 200) {
