@@ -12,9 +12,7 @@ const Playground = () => {
   useEffect(() => {
     const fetchRunningPods = async () => {
       try {
-        const res = await axios.get(
-          `${window.env.REACT_APP_PLAYGROUND_URL}/instance`
-        );
+        const res = await axios.get(`${window.env.REACT_APP_PLAYGROUND_URL}`);
         setServiceList(res.data);
         setIsLoading(false);
       } catch (error) {
