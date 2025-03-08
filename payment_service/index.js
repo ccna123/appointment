@@ -1,13 +1,18 @@
+const fs = require("fs");
 const express = require("express");
 const cors = require("cors");
 require("dotenv").config();
 const mongoose = require("mongoose");
-const stripe = require("stripe")(process.env.STRIPE_SECRET);
+
 const orderSchema = require("./model/orderSchema");
 const enrollSchema = require("./model/enrollSchema");
 const axios = require("axios");
 const app = express();
 const cookieParser = require("cookie-parser");
+
+const stripe = require("stripe")(
+  fs.readFileSync("/run/secrets/stripe_secret", "utf8").trim()
+);
 
 const corsOption = {
   origin: process.env.CORS_ORIGIN || "http://localhost:3000",

@@ -40,13 +40,16 @@ services:
       COGNITO_USER_POOL_ID: ${COGNITO_USER_POOL_ID}
       COGNITO_CLIENT_ID: ${COGNITO_CLIENT_ID}
       REDIS_URL: ${REDIS_URL}
-    volumes:
-      - ~/.aws:/root/.aws:ro
+      AWS_ACCESS_KEY_ID: /run/secrets/aws_access_key_id
+      AWS_SECRET_ACCESS_KEY: /run/secrets/aws_secret_access_key
     depends_on:
       redis:
         condition: service_healthy
     networks:
       - appointment_default
+    secrets:
+      - aws_access_key_id
+      - aws_secret_access_key
 
   course_service:
     image: "thanh1994/elearn-course-service"
@@ -65,6 +68,8 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       DATABASE_NAME: ${DATABASE_NAME}
       AUTH_SERVICE_URL: ${AUTH_SERVICE_URL}
+      AWS_ACCESS_KEY_ID: /run/secrets/aws_access_key_id
+      AWS_SECRET_ACCESS_KEY: /run/secrets/aws_secret_access_key
     depends_on:
       mongodb:
         condition: service_healthy
@@ -72,6 +77,9 @@ services:
       - ~/.aws:/root/.aws:ro
     networks:
       - appointment_default
+    secrets:
+      - aws_access_key_id
+      - aws_secret_access_key
 
   payment_service:
     image: "thanh1994/elearn-payment-service"
@@ -85,18 +93,17 @@ services:
     environment:
       <<: *cors-origin
       DATABASE_URL: ${DATABASE_URL}
-      STRIPE_SECRET: ${STRIPE_SECRET}
+      STRIPE_SECRET: /run/secrets/stripe_secret
       COURSE_SERVICE_URL: ${COURSE_SERVICE_URL}
       PAYMENT_SUCCESS_URL: ${PAYMENT_SUCCESS_URL}
       PAYMENT_CANCEL_URL: ${PAYMENT_CANCEL_URL}
-      AWS_PROFILE: ${AWS_PROFILE}
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
     depends_on:
       mongodb:
         condition: service_healthy
     networks:
       - appointment_default
+    secrets:
+      - stripe_secret
 
   playground_service:
     image: "playground"
@@ -160,3 +167,11 @@ networks:
     # and it will attach the services in your Compose file to these pre-existing networks.
   kind:
     external: true
+
+secrets:
+  stripe_secret:
+    file: ./secrets/stripe_secret.txt
+  aws_access_key_id:
+    file: ./secrets/aws_access_key_id.txt
+  aws_secret_access_key:
+    file: ./secrets/aws_secret_access_key.txt
