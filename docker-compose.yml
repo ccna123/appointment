@@ -76,7 +76,7 @@ services:
   payment_service:
     image: "thanh1994/elearn-payment-service"
     build:
-      context: /.payment_service
+      context: ./payment_service
       dockerfile: Dockerfile
     restart: unless-stopped
     ports:
