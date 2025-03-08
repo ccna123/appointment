@@ -10,9 +10,10 @@ services:
   ui:
     image: "thanh1994/elearn-ui"
     build:
-      context: /ui
+      context: ./ui
       dockerfile: Dockerfile
-    restart: always
+    restart: unless-stopped
+    read_only: true
     ports:
       - 80:80
     environment:
@@ -27,9 +28,10 @@ services:
   auth_service:
     image: "thanh1994/elearn-auth-service"
     build:
-      context: /auth_service
+      context: ./auth_service
       dockerfile: Dockerfile
-    restart: always
+    restart: unless-stopped
+    read_only: true
     ports:
       - 4020:4020
     environment:
@@ -49,9 +51,10 @@ services:
   course_service:
     image: "thanh1994/elearn-course-service"
     build:
-      context: /course_service
+      context: ./course_service
       dockerfile: Dockerfile
-    restart: always
+    restart: unless-stopped
+    read_only: true
     ports:
       - 4000:4000
     environment:
@@ -73,11 +76,12 @@ services:
   payment_service:
     image: "thanh1994/elearn-payment-service"
     build:
-      context: payment_service
+      context: /.payment_service
       dockerfile: Dockerfile
-    restart: always
+    restart: unless-stopped
     ports:
       - 4010:4010
+    read_only: true
     environment:
       <<: *cors-origin
       DATABASE_URL: ${DATABASE_URL}
@@ -86,32 +90,34 @@ services:
       PAYMENT_SUCCESS_URL: ${PAYMENT_SUCCESS_URL}
       PAYMENT_CANCEL_URL: ${PAYMENT_CANCEL_URL}
       AWS_PROFILE: ${AWS_PROFILE}
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
     depends_on:
       mongodb:
         condition: service_healthy
-    volumes:
-      - ~/.aws:/root/.aws:ro
     networks:
       - appointment_default
 
   playground_service:
     image: "playground"
     build:
-      context: playground_service
+      context: ./playground_service
       dockerfile: Dockerfile
+    restart: unless-stopped
+    read_only: true
     ports:
       - 4030:4030
     environment:
       <<: *cors-origin
       SERVICE_URL: ${SERVICE_URL}
     volumes:
-      - C:\appointment\playground_service\kind-config.yaml:/root/.kube/config
+      - ${KUBE_CONFIG_PATH:-./playground_service/kind-config.yaml}:/root/.kube/config
     networks:
       - kind
 
   mongodb:
     image: public.ecr.aws/docker/library/mongo:8.0.5-rc2-noble
-    restart: always
+    restart: unless-stopped
     ports:
       - "27017:27017"
     environment:
@@ -130,7 +136,7 @@ services:
 
   redis:
     image: "redis:6.2"
-    restart: always
+    restart: unless-stopped
     healthcheck:
       test: ["CMD", "redis-cli", "ping"]
       interval: 10s
