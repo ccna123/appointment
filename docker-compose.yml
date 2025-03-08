@@ -1,5 +1,11 @@
 version: "3.8"
 
+x-cors-origin: &cors-origin
+  CORS_ORIGIN: ${CORS_ORIGIN}
+
+x-aws-region: &aws-region
+  AWS_REGION: ${AWS_REGION}
+
 services:
   ui:
     image: "thanh1994/elearn-ui"
@@ -10,11 +16,13 @@ services:
     ports:
       - 80:80
     environment:
-      - REACT_APP_COURSE_SERVICE_URL=http://localhost:4000/course
-      - REACT_APP_PAYMENT_SERVICE_URL=http://localhost:4010/payment
-      - REACT_APP_AUTH_SERVICE_URL=http://localhost:4020/auth
-      - REACT_APP_STRIPE_PK=pk_test_51OazL7D3eD5YrsaQKPJqS7kHJJSrLpPMbh2sZmSrS9WI48NSYnr5dxPry4Me2G1Bp54Ads6KvX2XrohZvlXQP6d600WQy85XCz
-      - REACT_APP_PLAYGROUND_URL=http://localhost:4030/playground
+      REACT_APP_COURSE_SERVICE_URL: ${REACT_APP_COURSE_SERVICE_URL}
+      REACT_APP_PAYMENT_SERVICE_URL: ${REACT_APP_PAYMENT_SERVICE_URL}
+      REACT_APP_AUTH_SERVICE_URL: ${REACT_APP_AUTH_SERVICE_URL}
+      REACT_APP_STRIPE_PK: ${REACT_APP_STRIPE_PK}
+      REACT_APP_PLAYGROUND_URL: ${REACT_APP_PLAYGROUND_URL}
+    networks:
+      - appointment_default
 
   auth_service:
     image: "thanh1994/elearn-auth-service"
@@ -25,14 +33,17 @@ services:
     ports:
       - 4020:4020
     environment:
-      - ENV=prod
-      - AWS_REGION=ap-northeast-1
-      - COGNITO_USER_POOL_ID=ap-northeast-1_ZGhPseTQk
-      - COGNITO_CLIENT_ID=2fk992r46r12ig1eb7p3r8n9q9
-      - CORS_ORIGIN=http://localhost
-      - REDIS_URL=redis:6379
+      <<: [*cors-origin, *aws-region]
+      ENV: ${ENV}
+      COGNITO_USER_POOL_ID: ${COGNITO_USER_POOL_ID}
+      COGNITO_CLIENT_ID: ${COGNITO_CLIENT_ID}
+      REDIS_URL: ${REDIS_URL}
     volumes:
       - ~/.aws:/root/.aws:ro
+    depends_on:
+      - redis
+    networks:
+      - appointment_default
 
   course_service:
     image: "thanh1994/elearn-course-service"
@@ -43,18 +54,19 @@ services:
     ports:
       - 4000:4000
     environment:
-      - ENV=prod
-      - DYNAMODB_TABLE=course
-      - S3_BUCKET=caicanuoc123
-      - AWS_REGION=ap-northeast-1
-      - DATABASE_URL=mongodb://mongodb:27017/course?authSource=admin
-      - DATABASE_NAME=course
-      - AUTH_SERVICE_URL=http://auth_service:4020/auth/validate
-      - CORS_ORIGIN=http://localhost
+      <<: [*cors-origin, *aws-region]
+      ENV: ${ENV}
+      DYNAMODB_TABLE: ${DYNAMODB_TABLE}
+      S3_BUCKET: ${S3_BUCKET}
+      DATABASE_URL: ${DATABASE_URL}
+      DATABASE_NAME: ${DATABASE_NAME}
+      AUTH_SERVICE_URL: ${AUTH_SERVICE_URL}
     depends_on:
       - mongodb
     volumes:
       - ~/.aws:/root/.aws:ro
+    networks:
+      - appointment_default
 
   payment_service:
     image: "thanh1994/elearn-payment-service"
@@ -65,17 +77,19 @@ services:
     ports:
       - 4010:4010
     environment:
-      - DATABASE_URL=mongodb://mongodb:27017/course?authSource=admin
-      - STRIPE_SECRET=sk_test_51OazL7D3eD5YrsaQOK6xu6FCytoLxE5Sd5m87U9aAasG2PzR4jJEstsCao5qgd6bvMJCp1gG36qq1peZph0feIR4001YMAg8au
-      - COURSE_SERVICE_URL=http://course_service:4000/course
-      - CORS_ORIGIN=http://localhost
-      - PAYMENT_SUCCESS_URL=http://localhost/checkout/success
-      - PAYMENT_CANCEL_URL=http://localhost/checkout/cancel
-      - AWS_PROFILE=default
+      <<: *cors-origin
+      DATABASE_URL: ${DATABASE_URL}
+      STRIPE_SECRET: ${STRIPE_SECRET}
+      COURSE_SERVICE_URL: ${COURSE_SERVICE_URL}
+      PAYMENT_SUCCESS_URL: ${PAYMENT_SUCCESS_URL}
+      PAYMENT_CANCEL_URL: ${PAYMENT_CANCEL_URL}
+      AWS_PROFILE: ${AWS_PROFILE}
     depends_on:
       - mongodb
     volumes:
       - ~/.aws:/root/.aws:ro
+    networks:
+      - appointment_default
 
   playground_service:
     image: "playground"
@@ -85,8 +99,8 @@ services:
     ports:
       - 4030:4030
     environment:
-      - CORS_ORIGIN=http://localhost
-      - SERVICE_URL=http://localhost #ttyd service url in k8s
+      <<: *cors-origin
+      SERVICE_URL: ${SERVICE_URL}
     volumes:
       - C:\appointment\playground_service\kind-config.yaml:/root/.kube/config
     networks:
@@ -103,6 +117,10 @@ services:
     volumes:
       - mongo_data:/data/db
     command: "mongod --bind_ip_all"
+    networks:
+      - appointment_default
+    networks:
+      - appointment_default
 
   redis:
     image: "redis:6.2"
@@ -111,11 +129,18 @@ services:
       - "6379:6379"
     volumes:
       - redis_data:/data
+    networks:
+      - appointment_default
 
 volumes:
   mongo_data:
   redis_data:
 
 networks:
+  appointment_default:
+    # Docker Compose will not create these networks itself.
+    # Instead, it assumes they already exist in your Docker environment,
+    # and it will attach the services in your Compose file to these pre-existing networks.
+    external: true
   kind:
     external: true

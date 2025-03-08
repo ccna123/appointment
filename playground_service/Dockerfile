@@ -38,7 +38,8 @@ RUN mkdir -p /root/.kube && \
     cd /root/.kube && \
     touch config
 
-# Expose the port your application listens on
+# It’s a form of metadata or documentation, indicating the port your application uses.
+# This is a hint to the person running the container that they need to expose this port.
 EXPOSE 4030
 
 # Start the application with migrations

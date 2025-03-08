@@ -26,8 +26,9 @@ WORKDIR /express
 # Copy only the necessary files from the build stage (dependencies and built app)
 COPY --from=build /express /express
 
-# Expose the port your application listens on
-EXPOSE 4000
+# It’s a form of metadata or documentation, indicating the port your application uses.
+# This is a hint to the person running the container that they need to expose this port.
+EXPOSE 4010
 
 # Start the application with migrations
 CMD ["sh", "-c", "npm start"]
