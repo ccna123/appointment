@@ -158,6 +158,5 @@ networks:
     # Docker Compose will not create these networks itself.
     # Instead, it assumes they already exist in your Docker environment,
     # and it will attach the services in your Compose file to these pre-existing networks.
-    external: true
   kind:
     external: true
