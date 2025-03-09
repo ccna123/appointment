@@ -8,7 +8,7 @@ x-aws-region: &aws-region
 
 services:
   ui:
-    image: "thanh1994/elearn-ui"
+    image: "thanh1994/elearn-ui-${IMAGE_ENV}"
     build:
       context: ./ui
       dockerfile: Dockerfile
@@ -26,7 +26,7 @@ services:
       - default
 
   auth_service:
-    image: "thanh1994/elearn-auth-service"
+    image: "thanh1994/elearn-auth-service-${IMAGE_ENV}"
     build:
       context: ./auth_service
       dockerfile: Dockerfile
@@ -49,7 +49,7 @@ services:
       - default
 
   course_service:
-    image: "thanh1994/elearn-course-service"
+    image: "thanh1994/elearn-course-service-${IMAGE_ENV}"
     build:
       context: ./course_service
       dockerfile: Dockerfile
@@ -74,7 +74,7 @@ services:
       - default
 
   payment_service:
-    image: "thanh1994/elearn-payment-service"
+    image: "thanh1994/elearn-payment-service-${IMAGE_ENV}"
     build:
       context: ./payment_service
       dockerfile: Dockerfile
@@ -85,7 +85,7 @@ services:
     environment:
       <<: *cors-origin
       DATABASE_URL: ${DATABASE_URL}
-      STRIPE_SECRET: /run/secrets/stripe_secret
+      STRIPE_SECRET: ${STRIPE_SECRET}
       COURSE_SERVICE_URL: ${COURSE_SERVICE_URL}
       PAYMENT_SUCCESS_URL: ${PAYMENT_SUCCESS_URL}
       PAYMENT_CANCEL_URL: ${PAYMENT_CANCEL_URL}
@@ -94,11 +94,9 @@ services:
         condition: service_healthy
     networks:
       - default
-    secrets:
-      - stripe_secret
 
   playground_service:
-    image: "playground"
+    image: "thanh1994/elearn-playground-service-${IMAGE_ENV}"
     build:
       context: ./playground_service
       dockerfile: Dockerfile
@@ -159,7 +157,3 @@ networks:
     # and it will attach the services in your Compose file to these pre-existing networks.
   kind:
     external: true
-
-secrets:
-  stripe_secret:
-    file: ./secrets/stripe_secret.txt
