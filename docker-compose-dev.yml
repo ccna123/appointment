@@ -23,7 +23,7 @@ services:
       REACT_APP_STRIPE_PK: ${REACT_APP_STRIPE_PK}
       REACT_APP_PLAYGROUND_URL: ${REACT_APP_PLAYGROUND_URL}
     networks:
-      - appointment_default
+      - default
 
   auth_service:
     image: "thanh1994/elearn-auth-service"
@@ -40,16 +40,13 @@ services:
       COGNITO_USER_POOL_ID: ${COGNITO_USER_POOL_ID}
       COGNITO_CLIENT_ID: ${COGNITO_CLIENT_ID}
       REDIS_URL: ${REDIS_URL}
-      AWS_ACCESS_KEY_ID: /run/secrets/aws_access_key_id
-      AWS_SECRET_ACCESS_KEY: /run/secrets/aws_secret_access_key
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
     depends_on:
       redis:
         condition: service_healthy
     networks:
-      - appointment_default
-    secrets:
-      - aws_access_key_id
-      - aws_secret_access_key
+      - default
 
   course_service:
     image: "thanh1994/elearn-course-service"
@@ -68,18 +65,13 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       DATABASE_NAME: ${DATABASE_NAME}
       AUTH_SERVICE_URL: ${AUTH_SERVICE_URL}
-      AWS_ACCESS_KEY_ID: /run/secrets/aws_access_key_id
-      AWS_SECRET_ACCESS_KEY: /run/secrets/aws_secret_access_key
+      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
+      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
     depends_on:
       mongodb:
         condition: service_healthy
-    volumes:
-      - ~/.aws:/root/.aws:ro
     networks:
-      - appointment_default
-    secrets:
-      - aws_access_key_id
-      - aws_secret_access_key
+      - default
 
   payment_service:
     image: "thanh1994/elearn-payment-service"
@@ -101,7 +93,7 @@ services:
       mongodb:
         condition: service_healthy
     networks:
-      - appointment_default
+      - default
     secrets:
       - stripe_secret
 
@@ -139,7 +131,7 @@ services:
       timeout: 5s
       retries: 5
     networks:
-      - appointment_default
+      - default
 
   redis:
     image: "redis:6.2"
@@ -154,14 +146,14 @@ services:
     volumes:
       - redis_data:/data
     networks:
-      - appointment_default
+      - default
 
 volumes:
   mongo_data:
   redis_data:
 
 networks:
-  appointment_default:
+  default:
     # Docker Compose will not create these networks itself.
     # Instead, it assumes they already exist in your Docker environment,
     # and it will attach the services in your Compose file to these pre-existing networks.
@@ -171,7 +163,3 @@ networks:
 secrets:
   stripe_secret:
     file: ./secrets/stripe_secret.txt
-  aws_access_key_id:
-    file: ./secrets/aws_access_key_id.txt
-  aws_secret_access_key:
-    file: ./secrets/aws_secret_access_key.txt
