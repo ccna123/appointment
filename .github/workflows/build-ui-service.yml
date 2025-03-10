@@ -3,9 +3,9 @@ name: Build UI-Service
 on:
   push:
     branches:
-      - main  # Adjust to your default branch
+      - master
     paths:
-      - 'elearn/ui/**'  # Only trigger for changes in service-a
+      - 'elearn/ui/**'
 
 jobs:
   build:
