@@ -3,7 +3,7 @@ name: Build Playground-Service
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'appointment/playground_service/**'
 
