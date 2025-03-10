@@ -3,7 +3,7 @@ name: Build Auth-Service
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'appointment/auth_service/**'
 
