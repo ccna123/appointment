@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'ui/**'  # Trigger only for changes in ui/ folder
+      - '**'  # Trigger only for changes in ui/ folder
   workflow_dispatch:
 
 jobs:
