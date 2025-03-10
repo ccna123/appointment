@@ -28,7 +28,7 @@ services:
     image: "thanh1994/elearn-auth-service"
     build:
       context: ./auth_service
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     restart: unless-stopped
     read_only: true
     ports:
@@ -51,7 +51,7 @@ services:
     image: "thanh1994/elearn-course-service"
     build:
       context: ./course_service
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     restart: unless-stopped
     read_only: true
     ports:
@@ -76,7 +76,7 @@ services:
     image: "thanh1994/elearn-payment-service"
     build:
       context: ./payment_service
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     restart: unless-stopped
     ports:
       - 4010:4010
@@ -98,7 +98,7 @@ services:
     image: "thanh1994/elearn-playground-service"
     build:
       context: ./playground_service
-      dockerfile: Dockerfile.prod
+      dockerfile: Dockerfile
     restart: unless-stopped
     read_only: true
     ports:
