@@ -3,7 +3,7 @@ name: Build UI-Service
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'appointment/ui/**'
 
