@@ -27,6 +27,6 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: appointment/ui
+          context: /ui
           push: true
           tags: thanh1994/elearn-ui:latest
