@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - 'elearn/course_service/**'
+      - 'appointment/course_service/**'
 
 jobs:
   build:
@@ -26,6 +26,6 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: elearn/course_service
+          context: appointment/course_service
           push: true
           tags: thanh1994/elearn-course-service:latest
