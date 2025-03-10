@@ -11,7 +11,7 @@ services:
     image: "thanh1994/elearn-ui-${IMAGE_ENV}"
     build:
       context: ./ui
-      dockerfile: Dockerfile
+      Dockerfile.dev: Dockerfile.dev
     restart: unless-stopped
     ports:
       - 80:80
@@ -28,7 +28,7 @@ services:
     image: "thanh1994/elearn-auth-service-${IMAGE_ENV}"
     build:
       context: ./auth_service
-      dockerfile: Dockerfile
+      Dockerfile.dev: Dockerfile.dev
     restart: unless-stopped
     read_only: true
     ports:
@@ -51,7 +51,7 @@ services:
     image: "thanh1994/elearn-course-service-${IMAGE_ENV}"
     build:
       context: ./course_service
-      dockerfile: Dockerfile
+      Dockerfile.dev: Dockerfile.dev
     restart: unless-stopped
     read_only: true
     ports:
@@ -76,7 +76,7 @@ services:
     image: "thanh1994/elearn-payment-service-${IMAGE_ENV}"
     build:
       context: ./payment_service
-      dockerfile: Dockerfile
+      Dockerfile.dev: Dockerfile.dev
     restart: unless-stopped
     ports:
       - 4010:4010
@@ -98,7 +98,7 @@ services:
     image: "thanh1994/elearn-playground-service-${IMAGE_ENV}"
     build:
       context: ./playground_service
-      dockerfile: Dockerfile
+      Dockerfile.dev: Dockerfile.dev
     restart: unless-stopped
     read_only: true
     ports:

@@ -4,6 +4,7 @@ FROM node:23-bookworm-slim AS build
 # Set working directory
 WORKDIR /express
 
+
 # Update npm to the latest version
 RUN npm install -g npm@latest
 
@@ -17,7 +18,8 @@ RUN npm ci --only=production
 COPY . .
 
 # Stage 2: Create the production image with minimal footprint
-FROM node:23-bookworm-slim
+FROM gcr.io/distroless/nodejs22-debian12	
+# Create non-root user (Debian syntax)
 
 # Set working directory for the final image
 WORKDIR /express
@@ -30,4 +32,4 @@ COPY --from=build /express /express
 EXPOSE 4010
 
 # Start the application with migrations
-CMD ["sh", "-c", "npm start"]
+CMD ["index.js"]
