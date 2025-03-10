@@ -3,7 +3,7 @@ name: Build Auth-Service
 on:
   push:
     branches:
-      - main
+      - master
     paths:
       - 'elearn/auth_service/**'
 
