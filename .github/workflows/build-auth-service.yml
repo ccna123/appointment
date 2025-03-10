@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - 'elearn/auth_service/**'
+      - 'appointment/auth_service/**'
 
 jobs:
   build:
@@ -26,6 +26,6 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: elearn/auth_service
+          context: appointment/auth_service
           push: true
           tags: thanh1994/elearn-auth-service:latest
