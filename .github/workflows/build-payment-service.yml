@@ -3,7 +3,7 @@ name: Build Payment-Service
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'appointment/payment_service/**'
 
