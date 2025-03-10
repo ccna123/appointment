@@ -10,12 +10,14 @@ import "react-toastify/dist/ReactToastify.css";
 import axios from "axios";
 import notify from "../ultil/notify";
 import { loadStripe } from "@stripe/stripe-js";
+import { useConfig } from "../App";
 const Home = () => {
   const [selectedFooterItem, setSelectedFooterItem] = useState(0);
   const [courses, setCourses] = useState([]);
   const [, setIsLoading] = useState(false);
   const [selectedCourseId, setSelectedCourseId] = useState(null);
   const navigate = useNavigate();
+  const config = useConfig();
 
   const userData = JSON.parse(localStorage.getItem("user")) || {};
   const { user = {} } = userData;
@@ -29,12 +31,12 @@ const Home = () => {
         navigate("/login");
       }
       setIsLoading(true);
-      const stripePromise = await loadStripe(window.env.REACT_APP_STRIPE_PK);
+      const stripePromise = await loadStripe(config.REACT_APP_STRIPE_PK);
       const headers = { "Content-Type": "application/json" };
 
       const res = await axios.post(
         `${
-          window.env.REACT_APP_PAYMENT_SERVICE_URL ||
+          config.REACT_APP_PAYMENT_SERVICE_URL ||
           "http://localhost:4010/payment"
         }/checkout`,
         {
@@ -67,8 +69,7 @@ const Home = () => {
     try {
       const res = await axios.get(
         `${
-          window.env.REACT_APP_COURSE_SERVICE_URL ||
-          "http://localhost:4000/course"
+          config.REACT_APP_COURSE_SERVICE_URL || "http://localhost:4000/course"
         }/get`
       );
       setCourses(res.data);

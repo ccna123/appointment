@@ -3,17 +3,20 @@ import CardContainer from "../component/Card/Container";
 import axios from "axios";
 import "react-toastify/dist/ReactToastify.css";
 import { useNavigate } from "react-router-dom";
+import { useConfig } from "../App";
 
 const Payment = () => {
   const [myRecipt, setMyRecipt] = useState([]);
   const storedUser = localStorage.getItem("user");
   const userId = storedUser ? JSON.parse(storedUser)?.user?.userId : null;
   const navigate = useNavigate();
+  const config = useConfig();
+
   const getReceipt = async () => {
     try {
       const res = await axios.get(
         `${
-          window.env.REACT_APP_PAYMENT_SERVICE_URL ||
+          config.REACT_APP_PAYMENT_SERVICE_URL ||
           "http://localhost:4010/payment"
         }/receipt?userId=${userId}`
       );

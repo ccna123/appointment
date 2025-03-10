@@ -1,9 +1,11 @@
 import React, { useEffect } from "react";
 import CardContainer from "../component/Card/Container";
 import axios from "axios";
+import { useConfig } from "../App";
 
 const PaymentCancel = () => {
   const { userId } = JSON.parse(localStorage.getItem("user")).user || "";
+  const config = useConfig();
   useEffect(() => {
     console.log(`use effect call: ${userId}`);
 
@@ -11,7 +13,7 @@ const PaymentCancel = () => {
       try {
         const res = await axios.get(
           `${
-            window.env.REACT_APP_PAYMENT_SERVICE_URL ||
+            config.REACT_APP_PAYMENT_SERVICE_URL ||
             "http://localhost:4010/payment"
           }/cancel?userId=${userId}`
         );

@@ -6,8 +6,10 @@ import Input from "../component/Input/Input";
 import ResMess from "../component/ResponseMessage/ResMess";
 import { useForm } from "react-hook-form";
 import Spinner from "../component/Spinner";
+import { useConfig } from "../App";
 
 const Login = () => {
+  const config = useConfig();
   const [response, setResponse] = useState({
     status: null,
     mess: "",
@@ -24,7 +26,7 @@ const Login = () => {
     try {
       const res = await axios.post(
         `${
-          window.env.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
+          config.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
         }/login`,
         {
           email: data.email,

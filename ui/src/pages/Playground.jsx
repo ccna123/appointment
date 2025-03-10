@@ -2,17 +2,17 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 import Spinner from "../component/Spinner";
 import CardContainer from "../component/Card/Container";
-import { useNavigate } from "react-router-dom";
+import { useConfig } from "../App";
 
 const Playground = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [serviceList, setServiceList] = useState([]);
-  const navigate = useNavigate();
+  const config = useConfig();
 
   useEffect(() => {
     const fetchRunningPods = async () => {
       try {
-        const res = await axios.get(`${window.env.REACT_APP_PLAYGROUND_URL}`);
+        const res = await axios.get(`${config.REACT_APP_PLAYGROUND_URL}`);
         setServiceList(res.data);
         setIsLoading(false);
       } catch (error) {

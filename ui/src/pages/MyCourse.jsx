@@ -2,18 +2,19 @@ import React, { useEffect, useState } from "react";
 import MyCourseItem from "../component/MyCourse/MyCourseItem";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { useConfig } from "../App";
 
 const MyCourse = () => {
   const [myCourses, setMyCourses] = useState([]);
   const storedUser = localStorage.getItem("user");
   const userId = storedUser ? JSON.parse(storedUser)?.user?.userId : null;
   const navigate = useNavigate();
+  const config = useConfig();
   const fetchEnrolledCourses = async () => {
     try {
       const res = await axios.get(
         `${
-          window.env.REACT_APP_COURSE_SERVICE_URL ||
-          "http://localhost:4000/course"
+          config.REACT_APP_COURSE_SERVICE_URL || "http://localhost:4000/course"
         }/enrolled/${userId}`
       );
       setMyCourses(res.data);

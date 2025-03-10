@@ -4,18 +4,20 @@ import Button from "../Button/Button";
 import CardContainer from "../Card/Container";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useConfig } from "../../App";
 
 const LayoutLeft = () => {
   const navigate = useNavigate();
   const userData = JSON.parse(localStorage.getItem("user")) || {}; // Ensure it's an object
   const { user = {} } = userData; // Default to an empty object if user is missing
-
+  const config = useConfig();
   const { userId = "", name = "" } = user;
 
   const handleLogOut = async () => {
     try {
       const res = await axios.post(
-        `${window.env.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
+        `${
+          config.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
         }/logout`,
         {
           userId,
@@ -64,7 +66,8 @@ const LayoutLeft = () => {
   const getUserLoginStatus = async () => {
     try {
       const res = await axios.get(
-        `${window.env.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
+        `${
+          config.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
         }/login/status/${userId}`
       );
       if (res.status === 200) {

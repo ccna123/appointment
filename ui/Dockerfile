@@ -24,8 +24,8 @@ COPY --from=build /react/build /usr/share/nginx/html
 COPY nginx.conf /etc/nginx/nginx.conf
 
 # add env.sh to docker-entrypoint.d
-COPY inject_env.sh /docker-entrypoint.d/inject_env.sh
-RUN chmod +x /docker-entrypoint.d/inject_env.sh
+# COPY inject_env.sh /docker-entrypoint.d/inject_env.sh
+# RUN chmod +x /docker-entrypoint.d/inject_env.sh
 
 EXPOSE 80
 # Command to start NGINX with a custom PID path

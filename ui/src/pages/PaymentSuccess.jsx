@@ -1,15 +1,17 @@
 import React, { useEffect } from "react";
 import CardContainer from "../component/Card/Container";
 import axios from "axios";
+import { useConfig } from "../App";
 
 const PaymentSuccess = () => {
   const { userId } = JSON.parse(localStorage.getItem("user")).user || "";
+  const config = useConfig();
   useEffect(() => {
     async function handlePaySuccess() {
       try {
         await axios.get(
           `${
-            window.env.REACT_APP_PAYMENT_SERVICE_URL ||
+            config.REACT_APP_PAYMENT_SERVICE_URL ||
             "http://localhost:4010/payment"
           }/success?userId=${userId}`,
           {
