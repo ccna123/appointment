@@ -5,7 +5,7 @@ on:
     branches:
       - master
     paths:
-      - 'elearn/playground_service/**'
+      - 'appointment/playground_service/**'
 
 jobs:
   build:
@@ -26,6 +26,6 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: elearn/playground_service
+          context: appointment/playground_service
           push: true
           tags: thanh1994/elearn-playground-service:latest
