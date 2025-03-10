@@ -5,7 +5,7 @@ on:
     branches:
       - main
     paths:
-      - 'appointment/payment_service/**'
+      - 'payment_service/**'
 
 jobs:
   build:
@@ -26,6 +26,6 @@ jobs:
       - name: Build and push Docker image
         uses: docker/build-push-action@v5
         with:
-          context: appointment/payment_service
+          context: payment_service
           push: true
           tags: thanh1994/elearn-payment-service:latest
