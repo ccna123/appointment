@@ -3,7 +3,7 @@ name: Build Course-Service
 on:
   push:
     branches:
-      - master
+      - main
     paths:
       - 'appointment/course_service/**'
 
