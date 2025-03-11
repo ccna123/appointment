@@ -18,7 +18,6 @@ const app = express();
 app.use(cors(corsOption));
 app.use(express.json());
 
-// Initialize S3 client
 const s3Client = new S3Client({
   region: process.env.AWS_REGION,
   credentials: {
@@ -27,41 +26,29 @@ const s3Client = new S3Client({
   },
 });
 
+// Lab configurations (just IDs and S3 keys)
 const labConfigs = {
-  1: {
-    name: "lab-1",
-    s3Key: "lab1.yaml",
-    check: async (namespace) => {
-      const { stdout } = await execAsync(
-        `kubectl get pods -n ${namespace} -l type=lab -o json`
-      );
-      const pods = JSON.parse(stdout);
-      return pods.items.every((pod) => pod.status.phase === "Running");
-    },
-  },
+  1: { name: "lab-1", s3Key: "lab-1.yaml" },
+  2: { name: "lab-2", s3Key: "lab-2.yaml" },
+  3: { name: "lab-3", s3Key: "lab-3.yaml" },
+  // Add all 10 labs
 };
 
-// Function to fetch manifest from S3
+// Fetch YAML from S3
 const fetchManifestFromS3 = async (s3Key) => {
   const command = new GetObjectCommand({
     Bucket: process.env.S3_BUCKET_NAME,
     Key: s3Key,
   });
-  try {
-    const response = await s3Client.send(command);
-    const streamToString = (stream) =>
-      new Promise((resolve, reject) => {
-        const chunks = [];
-        stream.on("data", (chunk) => chunks.push(chunk));
-        stream.on("error", reject);
-        stream.on("end", () =>
-          resolve(Buffer.concat(chunks).toString("utf-8"))
-        );
-      });
-    return await streamToString(response.Body);
-  } catch (error) {
-    throw new Error(`Failed to fetch manifest from S3: ${error.message}`);
-  }
+  const response = await s3Client.send(command);
+  return new Promise((resolve, reject) => {
+    const chunks = [];
+    response.Body.on("data", (chunk) => chunks.push(chunk));
+    response.Body.on("error", reject);
+    response.Body.on("end", () =>
+      resolve(Buffer.concat(chunks).toString("utf-8"))
+    );
+  });
 };
 
 app.post("/playground/start", async (req, res) => {
@@ -70,51 +57,34 @@ app.post("/playground/start", async (req, res) => {
   if (!lab) return res.status(400).send("Invalid lab ID");
 
   const instanceId = Math.random().toString(36).substring(2, 15);
-  const namespace = `${lab.name.toLowerCase().replace(" ", "-")}-${instanceId}`;
+  const namespace = `${lab.name}-${instanceId}`;
 
   try {
-    console.log(`Creating namespace ${namespace}`);
-    const { stdout: nsStdout, stderr: nsStderr } = await execAsync(
-      `kubectl create namespace ${namespace}`
-    );
-    console.log("Namespace stdout:", nsStdout);
-    if (nsStderr) console.error("Namespace stderr:", nsStderr);
+    // Create namespace
+    await execAsync(`kubectl create namespace ${namespace}`);
     console.log(`Namespace ${namespace} created`);
 
-    // Fetch and apply lab manifest from S3
-    const labManifestTemplate = await fetchManifestFromS3(lab.s3Key);
-    const labManifest = labManifestTemplate.replace(/NAMESPACE/g, namespace);
-    console.log("Lab manifest content:", labManifest);
-
+    // Fetch and customize YAML
+    const yamlTemplate = await fetchManifestFromS3(lab.s3Key);
+    const yamlContent = yamlTemplate.replace(/NAMESPACE/g, namespace);
     const tmpDir = path.join(__dirname, "tmp");
     await fs.mkdir(tmpDir, { recursive: true });
-    const labTempFile = path.join(tmpDir, `lab-manifest-${instanceId}.yaml`);
-    await fs.writeFile(labTempFile, labManifest);
-    console.log(`Wrote manifest to ${labTempFile}`);
+    const yamlFile = path.join(tmpDir, `${lab.name}-${instanceId}.yaml`);
+    await fs.writeFile(yamlFile, yamlContent);
 
-    const { stdout: labStdout, stderr: labStderr } = await execAsync(
-      `kubectl apply -f ${labTempFile}`
+    // Apply YAML
+    await execAsync(`kubectl apply -f ${yamlFile}`);
+    await fs.unlink(yamlFile);
+    console.log(`Lab ${lab.name} deployed to ${namespace}`);
+
+    // Get Service Account token
+    const { stdout: tokenStdout } = await execAsync(
+      `kubectl get secret -n ${namespace} -o jsonpath='{.items[?(@.metadata.annotations.kubernetes\\.io/service-account\\.name=="lab-user")].data.token}' | base64 -d`
     );
-    console.log("Lab manifest stdout:", labStdout || "empty");
-    console.log("Lab manifest stderr:", labStderr || "none");
+    const saToken = tokenStdout.trim();
+    if (!saToken) throw new Error("Failed to retrieve SA token");
 
-    await fs.unlink(labTempFile);
-    console.log(`Cleaned up ${labTempFile}`);
-
-    if (!labStdout && labStderr) {
-      throw new Error(`Lab manifest application failed: ${labStderr}`);
-    }
-    if (
-      !labStdout ||
-      (!labStdout.includes("created") && !labStdout.includes("configured"))
-    ) {
-      throw new Error(
-        "Lab manifest applied but no resources were created or modified"
-      );
-    }
-    console.log("Lab manifest applied successfully");
-
-    // Generate kubeconfig for the lab namespace
+    // Generate and copy kubeconfig
     const kubeconfig = `
 apiVersion: v1
 clusters:
@@ -126,42 +96,31 @@ contexts:
 - context:
     cluster: lab-cluster
     namespace: ${namespace}
-    user: lab-terminal-user
+    user: lab-user
   name: lab-context
 current-context: lab-context
 kind: Config
-preferences: {}
 users:
-- name: lab-terminal-user
+- name: lab-user
   user:
-    token: ${process.env.SA_TOKEN || ""}
+    token: ${saToken}
     `;
     const kubeconfigFile = path.join(tmpDir, `kubeconfig-${instanceId}`);
     await fs.writeFile(kubeconfigFile, kubeconfig);
-    console.log(`Wrote kubeconfig to ${kubeconfigFile}`);
 
-    // Get the terminal pod name using the label selector from the Deployment
-    const labelSelector = `app=playground-instance-service`; // Match Helm values
+    const labelSelector = `app=playground-instance-service`;
     const { stdout: podStdout } = await execAsync(
       `kubectl get pods -n default -l ${labelSelector} -o jsonpath='{.items[0].metadata.name}'`
     );
-    const terminalPodName = podStdout.trim().replace(/'/g, ""); // Remove any surrounding quotes
-    if (!terminalPodName) {
-      throw new Error(
-        "No terminal pod found with the specified label selector"
-      );
-    }
-    console.log(`Found terminal pod: ${terminalPodName}`);
-
-    // Copy kubeconfig to the terminal pod
+    const terminalPodName = podStdout.trim().replace(/'/g, "");
+    if (!terminalPodName) throw new Error("No terminal pod found");
     await execAsync(
       `kubectl cp ${kubeconfigFile} ${terminalPodName}:/root/.kube/config -n default`
     );
     await fs.unlink(kubeconfigFile);
-    console.log(`Copied kubeconfig to ${terminalPodName} in default namespace`);
+    console.log(`Kubeconfig copied to ${terminalPodName}`);
 
     const serviceUrl = `${process.env.SERVICE_URL || "http://localhost"}:7681`;
-    console.log(`Lab started successfully: ${serviceUrl}`);
     res.json({ instanceId, serviceUrl, namespace });
   } catch (error) {
     console.error("Error starting lab:", error);
