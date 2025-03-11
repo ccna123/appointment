@@ -18,6 +18,9 @@ function App() {
   axios.defaults.withCredentials = true;
 
   const [config, setConfig] = useState(null);
+  const isLocalEnv =
+    process.env.NODE_ENV === "development" ||
+    window.location.hostname === "localhost";
 
   useEffect(() => {
     const fetchConfig = async () => {
@@ -28,27 +31,38 @@ function App() {
         console.error("Error fetching config:", error);
       }
     };
-    fetchConfig();
-  }, []);
+    if (!isLocalEnv) {
+      fetchConfig();
+    } else {
+      // Set default local config
+      setConfig({
+        REACT_APP_COURSE_SERVICE_URL: process.env.REACT_APP_COURSE_SERVICE_URL,
+        REACT_APP_PAYMENT_SERVICE_URL:
+          process.env.REACT_APP_PAYMENT_SERVICE_URL,
+        REACT_APP_AUTH_SERVICE_URL: process.env.REACT_APP_AUTH_SERVICE_URL,
+        REACT_APP_STRIPE_PK: process.env.REACT_APP_STRIPE_PK,
+        REACT_APP_PLAYGROUND_URL: process.env.REACT_APP_PLAYGROUND_URL,
+      });
+    }
+  }, [isLocalEnv]);
+
   return (
     <ConfigContext.Provider value={config}>
       <div className="App bg-gray-200 flex justify-center w-full min-h-screen">
-        {config && (
-          <BrowserRouter router>
-            <Routes>
-              <Route path="/login" element={<Login />} />
-              <Route path="/signup" element={<Signup />} />
-              <Route element={<Layout />}>
-                <Route path="/" element={<Home />} />
-                <Route path="/practice" element={<Playground />} />
-                <Route path="/checkout/success" element={<PaymentSuccess />} />
-                <Route path="/checkout/cancel" element={<PaymentCancel />} />
-                <Route path="/payment" element={<Payment />} />
-                <Route path="/mycourse" element={<MyCourse />} />
-              </Route>
-            </Routes>
-          </BrowserRouter>
-        )}
+        <BrowserRouter router>
+          <Routes>
+            <Route path="/login" element={<Login />} />
+            <Route path="/signup" element={<Signup />} />
+            <Route element={<Layout />}>
+              <Route path="/" element={<Home />} />
+              <Route path="/practice" element={<Playground />} />
+              <Route path="/checkout/success" element={<PaymentSuccess />} />
+              <Route path="/checkout/cancel" element={<PaymentCancel />} />
+              <Route path="/payment" element={<Payment />} />
+              <Route path="/mycourse" element={<MyCourse />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
       </div>
     </ConfigContext.Provider>
   );
