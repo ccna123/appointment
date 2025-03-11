@@ -1,0 +1,16 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: broken-pod
+  namespace: NAMESPACE
+  labels:
+    app: broken-pod
+    type: lab
+spec:
+  containers:
+    - name: nginx
+      image: nginx:nonexistent  // Changed to a non-existent tag for intentional failure
+      resources:
+        limits:
+          cpu: "0.5"
+          memory: "512Mi"
