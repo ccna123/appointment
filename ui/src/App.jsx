@@ -19,7 +19,7 @@ function App() {
 
   const [config, setConfig] = useState(null);
   const isLocalEnv =
-    process.env.NODE_ENV === "development" ||
+    process.env.ENV === "development" ||
     window.location.hostname === "localhost";
 
   useEffect(() => {

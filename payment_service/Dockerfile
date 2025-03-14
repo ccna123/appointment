@@ -28,7 +28,7 @@ WORKDIR /express
 COPY --from=build /express /express
 
 # It’s a form of metadata or documentation, indicating the port your application uses.
-# This is a hint to the person running the container that they need to expose this port.
+# This is a hint to the person running the local that they need to expose this port.
 EXPOSE 4010
 
 # Start the application with migrations
