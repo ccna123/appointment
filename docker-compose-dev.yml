@@ -64,8 +64,7 @@ services:
       DATABASE_URL: ${DATABASE_URL}
       DATABASE_NAME: ${DATABASE_NAME}
       AUTH_SERVICE_URL: ${AUTH_SERVICE_URL}
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      COGNITO_IDENTITY_POOL_ID: ${COGNITO_IDENTITY_POOL_ID}
     depends_on:
       mongodb:
         condition: service_healthy
