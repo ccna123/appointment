@@ -11,7 +11,7 @@ services:
     image: "thanh1994/elearn-ui-${IMAGE_ENV}"
     build:
       context: ./ui
-      Dockerfile.dev: Dockerfile.dev
+      dockerfile: Dockerfile.dev
     restart: unless-stopped
     ports:
       - 80:80
@@ -28,7 +28,7 @@ services:
     image: "thanh1994/elearn-auth-service-${IMAGE_ENV}"
     build:
       context: ./auth_service
-      Dockerfile.dev: Dockerfile.dev
+      dockerfile: Dockerfile.dev
     restart: unless-stopped
     read_only: true
     ports:
@@ -39,8 +39,7 @@ services:
       COGNITO_USER_POOL_ID: ${COGNITO_USER_POOL_ID}
       COGNITO_CLIENT_ID: ${COGNITO_CLIENT_ID}
       REDIS_URL: ${REDIS_URL}
-      AWS_ACCESS_KEY_ID: ${AWS_ACCESS_KEY_ID}
-      AWS_SECRET_ACCESS_KEY: ${AWS_SECRET_ACCESS_KEY}
+      COGNITO_IDENTITY_POOL_ID: ${COGNITO_IDENTITY_POOL_ID}
     depends_on:
       redis:
         condition: service_healthy
@@ -51,7 +50,7 @@ services:
     image: "thanh1994/elearn-course-service-${IMAGE_ENV}"
     build:
       context: ./course_service
-      Dockerfile.dev: Dockerfile.dev
+      dockerfile: Dockerfile.dev
     restart: unless-stopped
     read_only: true
     ports:
@@ -75,7 +74,7 @@ services:
     image: "thanh1994/elearn-payment-service-${IMAGE_ENV}"
     build:
       context: ./payment_service
-      Dockerfile.dev: Dockerfile.dev
+      dockerfile: Dockerfile.dev
     restart: unless-stopped
     ports:
       - 4010:4010
@@ -97,7 +96,7 @@ services:
     image: "thanh1994/elearn-playground-service-${IMAGE_ENV}"
     build:
       context: ./playground_service
-      Dockerfile.dev: Dockerfile.dev
+      dockerfile: Dockerfile.dev
     restart: unless-stopped
     read_only: true
     ports:
@@ -108,7 +107,7 @@ services:
     volumes:
       - ${KUBE_CONFIG_PATH:-./playground_service/kind-config.yaml}:/root/.kube/config
     networks:
-      - kind
+      - minikube
 
   mongodb:
     image: public.ecr.aws/docker/library/mongo:8.0.5-rc2-noble
@@ -153,5 +152,5 @@ networks:
     # Docker Compose will not create these networks itself.
     # Instead, it assumes they already exist in your Docker environment,
     # and it will attach the services in your Compose file to these pre-existing networks.
-  kind:
+  minikube:
     external: true
