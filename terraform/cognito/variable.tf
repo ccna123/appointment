@@ -7,3 +7,7 @@ variable "client_name" {
   default = "my-client"
   type    = string
 }
+
+variable "identity_pool_name" {
+  type = string
+}

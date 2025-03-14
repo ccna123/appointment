@@ -68,3 +68,64 @@ resource "aws_cognito_user_pool_client" "my_user_pool_client" {
   # Optional: Prevent user existence errors
   prevent_user_existence_errors = "ENABLED"
 }
+
+resource "aws_iam_role" "unauth_role" {
+  name = "cognito_unauth_role"
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Principal = {
+          Federated = "cognito-identity.amazonaws.com"
+        }
+        Action = "sts:AssumeRoleWithWebIdentity"
+        Condition = {
+          StringEquals = {
+            "cognito-identity.amazonaws.com:aud" = aws.cognito_identity_pool.elearn_identity_pool.id
+          }
+          "ForAnyValue:StringLike" = {
+            "cognito-identity.amazonaws.com:amr" = "unauthenticated"
+          }
+        }
+      }
+    ]
+  })
+}
+
+resource "aws_iam_policy" "unauth_dynamodb_policy" {
+  name = "cognito_unauth_dynamodb_policy"
+  policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [
+      {
+        Effect = "Allow"
+        Action = [
+          "dynamodb:GetItem",
+          "dynamodb:Query",
+          "dynamodb:Scan"
+        ]
+        Resource = [
+          "arn:aws:dynamodb:ap-northeast-1:223479137170:table/course"
+        ]
+      }
+    ]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "unauth_role_attachment" {
+  role       = aws_iam_role.unauth_role.name
+  policy_arn = aws_iam_policy.unauth_dynamodb_policy.arn
+}
+
+resource "aws_cognito_identity_pool" "elearn_identity_pool" {
+  identity_pool_name               = var.identity_pool_name
+  allow_unauthenticated_identities = true
+}
+
+resource "aws_cognito_identity_pool_roles_attachment" "elearn_identity_pool_roles_attachment" {
+  identity_pool_id = aws_cognito_identity_pool.elearn_identity_pool.id
+  roles = {
+    "unauthenticated" = aws_iam_role.unauth_role.arn
+  }
+}
