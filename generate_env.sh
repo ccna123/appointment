@@ -27,8 +27,8 @@ REDIS_URL=redis:6379
 # Course Service
 DYNAMODB_TABLE=course
 S3_BUCKET=caicanuoc123
-DATABASE_URL=mongodb://mongodb:27017/course
-DATABASE_NAME=course
+MONGODB_DATABASE_URL=mongodb://mongodb:27017/course
+MONGODB_DATABASE_NAME=course
 AUTH_SERVICE_URL=http://auth_service:4020/auth
 
 # Payment Service
