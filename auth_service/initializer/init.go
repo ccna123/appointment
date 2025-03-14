@@ -23,7 +23,7 @@ var (
 )
 
 func InitEnv() {	
-	if os.Getenv("ENV") != "container" {
+	if os.Getenv("ENV") == "container" {
 		err := godotenv.Load()
 		if err != nil {
 			log.Fatal("Error loading .env file")

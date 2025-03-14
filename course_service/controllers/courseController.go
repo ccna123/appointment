@@ -84,7 +84,7 @@ func GetEnrolled(c *gin.Context) {
 	userId := c.Param("userId")
 
 	// Find the database and collection
-	collection := initializer.MongoClient.Database(os.Getenv("DATABASE_NAME")).Collection("enrolls")
+	collection := initializer.MongoClient.Database(os.Getenv("MONGODB_DATABASE_NAME")).Collection("enrolls")
 
 	var results []models.Enrollment
 	filter := bson.D{{Key: "userId", Value: userId}}

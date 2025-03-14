@@ -120,7 +120,9 @@ users:
     await fs.unlink(kubeconfigFile);
     console.log(`Kubeconfig copied to ${terminalPodName}`);
 
-    const serviceUrl = `${process.env.SERVICE_URL || "http://localhost"}:7681`;
+    const serviceUrl = `${
+      process.env.TTYD_SERVICE_URL || "http://localhost"
+    }:7681`;
     res.json({ instanceId, serviceUrl, namespace });
   } catch (error) {
     console.error("Error starting lab:", error);

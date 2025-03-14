@@ -23,7 +23,7 @@ app.use(cors(corsOption));
 app.use(cookieParser());
 
 mongoose
-  .connect(process.env.DATABASE_URL)
+  .connect(process.env.MONGODB_DATABASE_URL)
   .then(() => console.log("MongoDB connected successfully 🚀"))
   .catch((err) => console.error("MongoDB connection error:", err));
 mongoose.connection.on("connected", () => {

@@ -8,7 +8,7 @@ x-aws-region: &aws-region
 
 services:
   ui:
-    image: "thanh1994/elearn-ui-${IMAGE_ENV}"
+    image: "thanh1994/elearn-ui"
     build:
       context: ./ui
       dockerfile: Dockerfile
@@ -25,10 +25,10 @@ services:
       - default
 
   auth_service:
-    image: "thanh1994/elearn-auth-service-${IMAGE_ENV}"
+    image: "thanh1994/elearn-auth-service"
     build:
       context: ./auth_service
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     restart: unless-stopped
     read_only: true
     ports:
@@ -47,10 +47,10 @@ services:
       - default
 
   course_service:
-    image: "thanh1994/elearn-course-service-${IMAGE_ENV}"
+    image: "thanh1994/elearn-course-service"
     build:
       context: ./course_service
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     restart: unless-stopped
     read_only: true
     ports:
@@ -71,7 +71,7 @@ services:
       - default
 
   payment_service:
-    image: "thanh1994/elearn-payment-service-${IMAGE_ENV}"
+    image: "thanh1994/elearn-payment-service"
     build:
       context: ./payment_service
       dockerfile: Dockerfile
@@ -81,7 +81,7 @@ services:
     read_only: true
     environment:
       <<: *cors-origin
-      DATABASE_URL: ${DATABASE_URL}
+      MONGODB_DATABASE_URL: ${MONGODB_DATABASE_URL}
       STRIPE_SECRET: ${STRIPE_SECRET}
       COURSE_SERVICE_URL: ${COURSE_SERVICE_URL}
       PAYMENT_SUCCESS_URL: ${PAYMENT_SUCCESS_URL}
@@ -93,17 +93,17 @@ services:
       - default
 
   playground_service:
-    image: "thanh1994/elearn-playground-service-${IMAGE_ENV}"
+    image: "thanh1994/elearn-playground-service"
     build:
       context: ./playground_service
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     restart: unless-stopped
     read_only: true
     ports:
       - 4030:4030
     environment:
       <<: *cors-origin
-      SERVICE_URL: ${SERVICE_URL}
+      TTYD_SERVICE_URL: ${TTYD_SERVICE_URL}
     volumes:
       - ${KUBE_CONFIG_PATH:-./playground_service/kind-config.yaml}:/root/.kube/config
     networks:

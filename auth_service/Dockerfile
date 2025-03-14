@@ -10,12 +10,11 @@ COPY . .
 
 RUN CGO_ENABLED=0 GOOS=linux go build -o myapp .
 
-FROM scratch
+FROM alpine:latest
 
 WORKDIR /app
 
 COPY --from=build /app/myapp .
-COPY --from=build /etc/ssl/certs/ca-certificates.crt /etc/ssl/certs/ca-certificates.crt
 
 # It’s a form of metadata or documentation, indicating the port your application uses.
 # This is a hint to the person running the container that they need to expose this port.

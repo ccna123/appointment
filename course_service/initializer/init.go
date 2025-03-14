@@ -21,7 +21,7 @@ var (
 )
 
 func InitEnv() {
-	if os.Getenv("ENV") != "container" {
+	if os.Getenv("ENV") == "container" {
 		err := godotenv.Load()
 		if err != nil {
 			log.Fatal("Error loading .env file")
@@ -86,7 +86,7 @@ func ConnectToMongo() (*mongo.Client, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
 
-	clientOptions := options.Client().ApplyURI(os.Getenv("DATABASE_URL"))
+	clientOptions := options.Client().ApplyURI(os.Getenv("MONGODB_DATABASE_URL"))
 	client, err := mongo.Connect(ctx, clientOptions)
 	if err != nil {
 		log.Fatalf("Failed to connect to MongoDB: %v", err)
