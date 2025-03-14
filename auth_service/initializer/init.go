@@ -22,11 +22,14 @@ var (
 	JwksURL            string
 )
 
-func InitEnv() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+func InitEnv() {	
+	if os.Getenv("ENV") != "container" {
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatal("Error loading .env file")
+		}
+	}	
+	
 
 	requiredEnvVars := []string{"AWS_REGION", "COGNITO_USER_POOL_ID", "COGNITO_CLIENT_ID", "COGNITO_IDENTITY_POOL_ID"}
 	for _, envVar := range requiredEnvVars {

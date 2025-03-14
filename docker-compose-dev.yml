@@ -11,7 +11,7 @@ services:
     image: "thanh1994/elearn-ui-${IMAGE_ENV}"
     build:
       context: ./ui
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     restart: unless-stopped
     ports:
       - 80:80
@@ -74,7 +74,7 @@ services:
     image: "thanh1994/elearn-payment-service-${IMAGE_ENV}"
     build:
       context: ./payment_service
-      dockerfile: Dockerfile.dev
+      dockerfile: Dockerfile
     restart: unless-stopped
     ports:
       - 4010:4010

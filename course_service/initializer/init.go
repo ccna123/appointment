@@ -21,10 +21,12 @@ var (
 )
 
 func InitEnv() {
-	err := godotenv.Load()
-	if err != nil {
-		log.Fatal("Error loading .env file")
-	}
+	if os.Getenv("ENV") != "container" {
+		err := godotenv.Load()
+		if err != nil {
+			log.Fatal("Error loading .env file")
+		}
+	}	
 }
 
 func InitDynamodb() {

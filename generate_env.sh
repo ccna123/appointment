@@ -8,7 +8,7 @@ cat << EOF > "$ENV_FILE"
 # Global Variables
 CORS_ORIGIN=http://localhost:3000
 AWS_REGION=ap-northeast-1
-ENV=dev
+ENV=container
 IMAGE_ENV=dev
 COGNITO_IDENTITY_POOL_ID=ap-northeast-1:e2db3a16-f632-4aed-9f4f-7d1e3600ebb0
 
