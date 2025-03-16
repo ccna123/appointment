@@ -19,6 +19,7 @@ FROM nginx:stable-alpine
 
 # Copy the built React app from the build stage
 COPY --from=build /react/build /usr/share/nginx/html
+COPY --from=build /react/config.json /usr/share/nginx/html
 
 # Copy custom NGINX config file
 COPY nginx.conf /etc/nginx/nginx.conf
