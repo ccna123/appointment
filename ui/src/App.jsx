@@ -18,33 +18,36 @@ function App() {
   axios.defaults.withCredentials = true;
 
   const [config, setConfig] = useState(null);
-  const isLocalEnv =
-    process.env.ENV === "development" ||
-    window.location.hostname === "localhost";
+  const isLocalEnv = process.env.ENV === "prod";
 
   useEffect(() => {
     const fetchConfig = async () => {
       try {
+        // Check if config was injected at runtime
+        if (window.APP_CONFIG) {
+          setConfig(window.APP_CONFIG);
+          return;
+        }
+
+        // Fallback to fetching config file
         const res = await axios.get("/config.json");
         setConfig(res.data);
       } catch (error) {
         console.error("Error fetching config:", error);
+        // Optional: Set default config in case of failure
+        setConfig({
+          COURSE_SERVICE_URL: "http://localhost:3000",
+          PAYMENT_SERVICE_URL: "http://localhost:3001",
+          AUTH_SERVICE_URL: "http://localhost:3002",
+          STRIPE_PK:
+            "pk_test_51OazL7D3eD5YrsaQKPJqS7kHJJSrLpPMbh2sZmSrS9WI48NSYnr5dxPry4Me2G1Bp54Ads6KvX2XrohZvlXQP6d600WQy85XCz",
+          PLAYGROUND_URL: "http://localhost:3003",
+        });
       }
     };
-    if (!isLocalEnv) {
-      fetchConfig();
-    } else {
-      // Set default local config
-      setConfig({
-        REACT_APP_COURSE_SERVICE_URL: process.env.REACT_APP_COURSE_SERVICE_URL,
-        REACT_APP_PAYMENT_SERVICE_URL:
-          process.env.REACT_APP_PAYMENT_SERVICE_URL,
-        REACT_APP_AUTH_SERVICE_URL: process.env.REACT_APP_AUTH_SERVICE_URL,
-        REACT_APP_STRIPE_PK: process.env.REACT_APP_STRIPE_PK,
-        REACT_APP_PLAYGROUND_URL: process.env.REACT_APP_PLAYGROUND_URL,
-      });
-    }
-  }, [isLocalEnv]);
+
+    fetchConfig();
+  }, []);
 
   return (
     <ConfigContext.Provider value={config}>
