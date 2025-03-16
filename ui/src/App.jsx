@@ -36,12 +36,12 @@ function App() {
         console.error("Error fetching config:", error);
         // Optional: Set default config in case of failure
         setConfig({
-          COURSE_SERVICE_URL: "http://localhost:3000",
-          PAYMENT_SERVICE_URL: "http://localhost:3001",
-          AUTH_SERVICE_URL: "http://localhost:3002",
-          STRIPE_PK:
+          REACT_APP_COURSE_SERVICE_URL: "http://localhost:4000/course",
+          REACT_APP_PAYMENT_SERVICE_URL: "http://localhost:4010/payment",
+          REACT_APP_AUTH_SERVICE_URL: "http://localhost:4020/auth",
+          REACT_APP_STRIPE_PK:
             "pk_test_51OazL7D3eD5YrsaQKPJqS7kHJJSrLpPMbh2sZmSrS9WI48NSYnr5dxPry4Me2G1Bp54Ads6KvX2XrohZvlXQP6d600WQy85XCz",
-          PLAYGROUND_URL: "http://localhost:3003",
+          REACT_APP_PLAYGROUND_URL: "http://localhost:4030/playground",
         });
       }
     };
