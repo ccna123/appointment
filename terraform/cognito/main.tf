@@ -82,7 +82,7 @@ resource "aws_iam_role" "unauth_role" {
         Action = "sts:AssumeRoleWithWebIdentity"
         Condition = {
           StringEquals = {
-            "cognito-identity.amazonaws.com:aud" = aws.cognito_identity_pool.elearn_identity_pool.id
+            "cognito-identity.amazonaws.com:aud" = aws_cognito_identity_pool.elearn_identity_pool.id
           }
           "ForAnyValue:StringLike" = {
             "cognito-identity.amazonaws.com:amr" = "unauthenticated"

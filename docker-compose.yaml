@@ -86,24 +86,6 @@ services:
         condition: service_healthy
     networks:
       - default
-
-  playground_service:
-    image: "thanh1994/elearn-playground-service"
-    build:
-      context: ./playground_service
-      dockerfile: Dockerfile
-    restart: unless-stopped
-    read_only: true
-    ports:
-      - 4030:4030
-    environment:
-      <<: *cors-origin
-      TTYD_SERVICE_URL: ${TTYD_SERVICE_URL}
-    volumes:
-      - ${KUBE_CONFIG_PATH:-./playground_service/kind-config.yaml}:/root/.kube/config
-    networks:
-      - minikube
-
   mongodb:
     image: public.ecr.aws/docker/library/mongo:8.0.5-rc2-noble
     restart: unless-stopped
@@ -147,5 +129,3 @@ networks:
     # Docker Compose will not create these networks itself.
     # Instead, it assumes they already exist in your Docker environment,
     # and it will attach the services in your Compose file to these pre-existing networks.
-  minikube:
-    external: true
