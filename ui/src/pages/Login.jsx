@@ -7,6 +7,17 @@ import ResMess from "../component/ResponseMessage/ResMess";
 import { useForm } from "react-hook-form";
 import Spinner from "../component/Spinner";
 import { useConfig } from "../App";
+import { signIn, fetchAuthSession } from "@aws-amplify/auth";
+import { Amplify } from "@aws-amplify/core";
+
+Amplify.configure({
+  Auth: {
+    Cognito: {
+      userPoolId: process.env.REACT_APP_COGNITO_USER_POOL_ID,
+      userPoolClientId: process.env.REACT_APP_COGNITO_CLIENT_ID,
+    },
+  },
+});
 
 const Login = () => {
   const config = useConfig();
@@ -24,42 +35,62 @@ const Login = () => {
 
   const onSubmit = async (data) => {
     try {
-      const res = await axios.post(
-        `${
-          config.REACT_APP_AUTH_SERVICE_URL || "http://localhost:4020/auth"
-        }/login`,
-        {
-          email: data.email,
-          password: data.password,
+      // Use functional signIn API (positional args still supported for backwards compat, but named params preferred in v6)
+      const { nextStep } = await signIn(data.email, data.password);
+
+      // Fetch the full session/tokens after successful sign-in
+      const session = await fetchAuthSession({ forceRefresh: true });
+      const idToken = session.tokens?.idToken?.toString();
+      const accessToken = session.tokens?.accessToken?.toString();
+      const refreshToken = session.tokens?.refreshToken?.toString();
+
+      if (!idToken) {
+        throw new Error("No ID token received");
+      }
+
+      // Decode JWT for user info/role (or fetch from backend/Cognito attributes via getCurrentUser)
+      const user = await fetchAuthSession(); // Reuse to get user context
+      const userData = {
+        idToken,
+        accessToken,
+        refreshToken,
+        user: {
+          username: user.username || data.email,
+          // role: user.signInDetails?.loginAlias || "user", // Adjust based on your setup; fetch custom attributes if needed
+          // role: "user", // Placeholder; implement role fetch via backend or Cognito
         },
-        {
-          withCredentials: true,
-        }
-      );
+      };
+
+      // Store tokens in localStorage (consider secure alternatives like HttpOnly cookies)
+      localStorage.setItem("user", JSON.stringify(userData));
 
       setResponse({
-        status: res.status,
-        mess: res.data.mess,
+        status: 200,
+        mess: "Login successful",
       });
-      localStorage.setItem("user", JSON.stringify(res.data));
 
-      if (res.data.user.role === "admin") {
-        setTimeout(() => {
-          navigate("/admin");
-        }, 1000);
+      // Validate role and redirect (update role logic as needed)
+      if (userData.user.role === "admin") {
+        setTimeout(() => navigate("/admin"), 1000);
       } else {
-        setTimeout(() => {
-          navigate("/");
-        }, 1000);
+        setTimeout(() => navigate("/"), 1000);
       }
     } catch (error) {
-      if (error.response) {
-        // Server responded with an error status (4xx, 5xx)
-        setResponse({
-          status: error.response.status,
-          mess: error.response.statusText,
-        });
+      console.error("Login error:", error);
+      // Map Cognito errors to status codes
+      let status = 401;
+      let message = error.message || "Login failed";
+      if (error.name === "NotAuthorizedException") {
+        status = 401;
+        message = "Invalid credentials";
+      } else if (error.name === "UserNotFoundException") {
+        status = 404;
+        message = "User not found";
       }
+      setResponse({
+        status,
+        mess: message,
+      });
     }
   };
 

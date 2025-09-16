@@ -19,18 +19,18 @@ function App() {
 
   const [config, setConfig] = useState(null);
 
-  useEffect(() => {
-    const fetchConfig = async () => {
-      try {
-        const res = await axios.get("/config.json");
-        setConfig(res.data);
-      } catch (error) {
-        console.error("Error fetching config:", error);
-      }
-    };
+  // useEffect(() => {
+  //   const fetchConfig = async () => {
+  //     try {
+  //       const res = await axios.get("/config.json");
+  //       setConfig(res.data);
+  //     } catch (error) {
+  //       console.error("Error fetching config:", error);
+  //     }
+  //   };
 
-    fetchConfig();
-  }, []);
+  //   fetchConfig();
+  // }, []);
 
   return (
     <ConfigContext.Provider value={config}>
